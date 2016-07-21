@@ -30,6 +30,11 @@ class Sticky {
     el.sticky.marginTop = el.getAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
     el.sticky.rect = this.getRect(el);
 
+    // fix when el is image that has not yet loaded and width, height = 0
+    if (el.tagName.toLowerCase() === 'img') {
+      el.onload = () => el.sticky.rect = this.getRect(el);
+    }
+
     el.sticky.container = this.getContainer(el);
     el.sticky.container.rect = this.getRect(el.sticky.container);
 
