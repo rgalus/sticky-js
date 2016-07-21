@@ -29,41 +29,29 @@
         margin: 0;
       }
 
-      img {
-        z-index: 2;
-      }
-
       pre {
         display: inline-block;
-
-        font-size: 16px;
-        font-family: 'Ubuntu Mono', monospace;
-
         padding: 15px 30px;
+        margin-bottom: 30px;
 
         color: #fff;
+        font-family: 'Ubuntu Mono', monospace;
+        
         background: #34495e;
-        border-radius: 4px;
-      }
-
-      pre:not(:last-child) {
-        margin-bottom: 30px;
+        border-radius: 8px;
       }
 
       footer {
         color: #fff;
         background: #34495e;
-        padding: 100px 0 100px;
-      }
-
-      main {
-        margin-top: 77px;
+        padding: 100px 0;
       }
 
       .top-bar {
         position: fixed;
         top: 0;
         left: 0;
+        z-index: 2;
 
         width: 100%;
       }
@@ -72,7 +60,6 @@
       .top-bar ul {
         color: #fff;
         background-color: #1abc9c;
-        z-index: 4;
       }
 
       .top-bar a {
@@ -87,10 +74,10 @@
         margin-top: 77px;
         background: #ecf0f1;
 
-        padding: 100px 0 100px;
+        padding: 100px 0;
       }
 
-      *:last-child {
+      p:last-child {
         margin-bottom: 0;
       }
 
@@ -165,7 +152,7 @@
 
     <script>
 
-      var sticky = new Sticky('[data-sticky]', {});
+      var sticky = new Sticky('[data-sticky]');
 
     </script>
 
