@@ -129,6 +129,13 @@ class Sticky {
     }
   }
 
+  update() {
+    for (let i = 0, len = this.elements.length; i < len; i++) {
+      this.updateRect(this.elements[i]);
+      this.setPosition(this.elements[i]);
+    }
+  }
+
   addStyle(el, styles) {
     for (let property in styles) {
       if (styles.hasOwnProperty(property)) {
