@@ -1,3 +1,4 @@
+
 ((win, doc) => {
   'use strict';
 
