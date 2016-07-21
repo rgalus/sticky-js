@@ -3,7 +3,7 @@
 
 [DEMO](https://rgalus.github.io/sticky-js/)
 
-Sticky-js is a responsive library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website.
+Sticky-js is a library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
 
 ## Features
 
@@ -12,12 +12,12 @@ Sticky-js is a responsive library for sticky elements written in vanilla javascr
 - It can be sticky to the entire page or to selected parent container
 - No additional CSS needed
 
-### Install
+## Install
 ````
 npm install sticky-js
 ````
 
-### Usage
+## Usage
 
 Simply include
 
@@ -44,7 +44,7 @@ var Sticky = require('sticky-js');
 var sticky = new Sticky('.selector');
 ```
 
-### Examples
+## Examples
 
 Simple
 
@@ -82,7 +82,7 @@ Multiple sticky elements with data-sticky-container and [options](https://github
 </script>
 ```
 
-### Methods
+## Methods
 
 Update sticky, e.g. when parent container is dynamically changing height (angular templates etc)
 
@@ -92,7 +92,7 @@ var sticky = new Sticky('.sticky');
 sticky.update();
 ```
 
-### Available options
+## Available options
 
 Option | Type | Default | Description
 ------ | ---- | ------- | ----
