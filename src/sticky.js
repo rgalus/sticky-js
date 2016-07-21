@@ -1,7 +1,7 @@
 
 class Sticky {
-  constructor(element) {
-    this.element = element;
+  constructor(selector) {
+    this.selector = selector;
 
     this.vp = this.getViewportSize();
     this.scrollTop = this.getScrollTopPosition();
@@ -10,13 +10,13 @@ class Sticky {
   }
 
   initialize() {
-    const stickyElements = document.querySelectorAll(this.element);
+    this.elements = document.querySelectorAll(this.selector);
 
     // initialize sticky only when dom is fully loaded
     const DOMContentLoaded = setInterval(() => {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        for (let i = 0, len = stickyElements.length; i < len; i++) {
-          this.activate(stickyElements[i]);
+        for (let i = 0, len = this.elements.length; i < len; i++) {
+          this.activate(this.elements[i]);
         }
 
         clearInterval(DOMContentLoaded);
