@@ -5,10 +5,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Sticky = function () {
-  function Sticky(element) {
+  function Sticky(selector) {
     _classCallCheck(this, Sticky);
 
-    this.element = element;
+    this.selector = selector;
 
     this.vp = this.getViewportSize();
     this.scrollTop = this.getScrollTopPosition();
@@ -21,13 +21,13 @@ var Sticky = function () {
     value: function initialize() {
       var _this = this;
 
-      var stickyElements = document.querySelectorAll(this.element);
+      this.elements = document.querySelectorAll(this.selector);
 
       // initialize sticky only when dom is fully loaded
       var DOMContentLoaded = setInterval(function () {
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
-          for (var i = 0, len = stickyElements.length; i < len; i++) {
-            _this.activate(stickyElements[i]);
+          for (var i = 0, len = _this.elements.length; i < len; i++) {
+            _this.activate(_this.elements[i]);
           }
 
           clearInterval(DOMContentLoaded);
@@ -43,6 +43,13 @@ var Sticky = function () {
 
       el.sticky.marginTop = el.getAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
       el.sticky.rect = this.getRect(el);
+
+      // fix when el is image that has not yet loaded and width, height = 0
+      if (el.tagName.toLowerCase() === 'img') {
+        el.onload = function () {
+          return el.sticky.rect = _this2.getRect(el);
+        };
+      }
 
       el.sticky.container = this.getContainer(el);
       el.sticky.container.rect = this.getRect(el.sticky.container);
@@ -144,6 +151,14 @@ var Sticky = function () {
         }
       } else {
         this.removeStyle(el, ['position', 'width', 'top', 'left', 'right', 'bottom']);
+      }
+    }
+  }, {
+    key: 'update',
+    value: function update() {
+      for (var i = 0, len = this.elements.length; i < len; i++) {
+        this.updateRect(this.elements[i]);
+        this.setPosition(this.elements[i]);
       }
     }
   }, {
