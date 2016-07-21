@@ -1,7 +1,7 @@
 
 class Sticky {
-  constructor(element) {
-    this.element = element;
+  constructor(selector) {
+    this.selector = selector;
 
     this.vp = this.getViewportSize();
     this.scrollTop = this.getScrollTopPosition();
@@ -10,11 +10,18 @@ class Sticky {
   }
 
   initialize() {
-    const stickyElements = document.querySelectorAll(this.element);
+    this.elements = document.querySelectorAll(this.selector);
 
-    for (let i = 0, len = stickyElements.length; i < len; i++) {
-      window.addEventListener('load', () => this.activate(stickyElements[i]));
-    }
+    // initialize sticky only when dom is fully loaded
+    const DOMContentLoaded = setInterval(() => {
+      if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        for (let i = 0, len = this.elements.length; i < len; i++) {
+          this.activate(this.elements[i]);
+        }
+
+        clearInterval(DOMContentLoaded);
+      }
+    }, 100);
   }
 
   activate(el) {
@@ -22,6 +29,11 @@ class Sticky {
 
     el.sticky.marginTop = el.getAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
     el.sticky.rect = this.getRect(el);
+
+    // fix when el is image that has not yet loaded and width, height = 0
+    if (el.tagName.toLowerCase() === 'img') {
+      el.onload = () => el.sticky.rect = this.getRect(el);
+    }
 
     el.sticky.container = this.getContainer(el);
     el.sticky.container.rect = this.getRect(el.sticky.container);
@@ -114,6 +126,13 @@ class Sticky {
       }
     } else {
       this.removeStyle(el, [ 'position', 'width', 'top', 'left', 'right', 'bottom']);
+    }
+  }
+
+  update() {
+    for (let i = 0, len = this.elements.length; i < len; i++) {
+      this.updateRect(this.elements[i]);
+      this.setPosition(this.elements[i]);
     }
   }
 
