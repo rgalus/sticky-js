@@ -23,15 +23,16 @@ var Sticky = function () {
 
       var stickyElements = document.querySelectorAll(this.element);
 
-      var _loop = function _loop(i, len) {
-        window.addEventListener('load', function () {
-          return _this.activate(stickyElements[i]);
-        });
-      };
+      // initialize sticky only when dom is fully loaded
+      var DOMContentLoaded = setInterval(function () {
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+          for (var i = 0, len = stickyElements.length; i < len; i++) {
+            _this.activate(stickyElements[i]);
+          }
 
-      for (var i = 0, len = stickyElements.length; i < len; i++) {
-        _loop(i, len);
-      }
+          clearInterval(DOMContentLoaded);
+        }
+      }, 100);
     }
   }, {
     key: 'activate',

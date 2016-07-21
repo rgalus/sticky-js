@@ -12,9 +12,16 @@ class Sticky {
   initialize() {
     const stickyElements = document.querySelectorAll(this.element);
 
-    for (let i = 0, len = stickyElements.length; i < len; i++) {
-      window.addEventListener('load', () => this.activate(stickyElements[i]));
-    }
+    // initialize sticky only when dom is fully loaded
+    const DOMContentLoaded = setInterval(() => {
+      if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        for (let i = 0, len = stickyElements.length; i < len; i++) {
+          this.activate(stickyElements[i]);
+        }
+
+        clearInterval(DOMContentLoaded);
+      }
+    }, 100);
   }
 
   activate(el) {
