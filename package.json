@@ -4,6 +4,7 @@
   "description": "Sticky elements",
   "main": "dist/sticky.min.js",
   "scripts": {
+    "start": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,7 +28,9 @@
     "del": "^2.2.1",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-babel": "^6.1.2",
+    "gulp-gzip": "^1.4.0",
     "gulp-rename": "^1.2.2",
+    "gulp-size": "^2.1.0",
     "gulp-uglify": "^1.5.4"
   }
 }

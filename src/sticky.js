@@ -1,112 +1,133 @@
 
-((win, doc) => {
-  'use strict';
+class Sticky {
+  constructor(element) {
+    this.element = element;
 
-  const stickyElements = doc.querySelectorAll('[data-sticky]');
+    this.vp = this.getViewportSize();
+    this.scrollTop = this.getScrollTopPosition();
 
-  const vp = {
-    width: Math.max(doc.documentElement.clientWidth, win.innerWidth || 0),
-    height: Math.max(doc.documentElement.clientHeight, win.innerHeight || 0),
-  };
-
-  const breakpoints = {
-    medium: 640,
-    large: 1024,
-    xlarge: 1200,
-  };
-
-  for (let i = 0, len = stickyElements.length; i < len; i++) {
-    win.addEventListener('load', () => activate(stickyElements[i]));
+    this.initialize();
   }
 
-  function activate(el) {
+  initialize() {
+    const stickyElements = document.querySelectorAll(this.element);
+
+    for (let i = 0, len = stickyElements.length; i < len; i++) {
+      window.addEventListener('load', () => this.activate(stickyElements[i]));
+    }
+  }
+
+  activate(el) {
     el.sticky = {};
 
-    if (el.hasAttribute('data-margin-top')) {
-      el.sticky.margin = parseInt(el.getAttribute('data-margin-top'));
-    } else {
-      el.sticky.margin = 0;
-    }
+    el.sticky.marginTop = el.getAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
+    el.sticky.rect = this.getRect(el);
 
-    getRectangles(el);
-    setPosition(el);
+    el.sticky.container = this.getContainer(el);
+    el.sticky.container.rect = this.getRect(el.sticky.container);
 
-    win.addEventListener('resize', () => {
-      vp.width = Math.max(doc.documentElement.clientWidth, win.innerWidth || 0);
-      vp.height = Math.max(doc.documentElement.clientHeight, win.innerHeight || 0);
-
-      getRectangles(el);
-      setPosition(el);
+    window.addEventListener('resize', () => {
+      this.vp = this.getViewportSize();
+      this.updateRect(el);
+      this.setPosition(el);
     });
 
-    win.addEventListener('scroll', () => setPosition(el));
+    window.addEventListener('scroll', () => this.scrollTop = this.getScrollTopPosition());
+    window.addEventListener('scroll', () => this.setPosition(el));
+
+    this.setPosition(el);
   }
 
-  function getRectangles(el) {
-    el.classList.remove('sticky');
-    removeStyles(el);
+  getRect(el) {
+    const position = this.getTopLeftPosition(el);
 
-    el.sticky.top = getTopLeftPosition(el).top;
-    el.sticky.left = getTopLeftPosition(el).left;
-    el.sticky.width = el.offsetWidth;
-    el.sticky.height = el.offsetHeight;
+    position.offsetLeft = el.offsetLeft;
+    position.width = el.offsetWidth;
+    position.height = el.offsetHeight;
 
-    let container = el;
-
-    while (typeof container.getAttribute('data-sticky-container') !== 'string' && container !== doc.querySelector('main')) {
-      container = container.parentNode;
-    }
-
-    el.sticky.container = getTopLeftPosition(container);
-    el.sticky.container.width = container.offsetWidth;
-    el.sticky.container.height = container.offsetHeight;
-
-    return el;
+    return position;
   }
 
-  function getTopLeftPosition(el) {
+  updateRect(el) {
+    this.removeStyle(el, [ 'position', 'width', 'top', 'left', 'right', 'bottom']);
+
+    el.sticky.rect = this.getRect(el);
+    el.sticky.container.rect = this.getRect(el.sticky.container);
+  }
+
+  getTopLeftPosition(el) {
     let top = 0, left = 0;
+
     do {
-        top += el.offsetTop  || 0;
-        left += el.offsetLeft || 0;
-        el = el.offsetParent;
+      top += el.offsetTop  || 0;
+      left += el.offsetLeft || 0;
+      el = el.offsetParent;
     } while(el);
 
     return { top, left };
   }
 
-  function setPosition(el) {
-    if (vp.width < breakpoints[el.getAttribute('data-sticky-on')]) return;
-    if (vp.height < el.sticky.height) return;
+  getContainer(el) {
+    let container = el;
 
-    const scrollTop = (win.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0) || 0;
+    while (
+      typeof container.getAttribute('data-sticky-container') !== 'string'
+      && container !== document.documentElement
+    ) {
+      container = container.parentNode;
+    }
 
-    if (scrollTop > (el.sticky.top - el.sticky.margin)) {
-      el.classList.add('sticky');
-      el.style.left = el.sticky.left + 'px';
-      el.style.right = 'auto';
-      el.style.bottom = 'auto';
-      el.style.width = el.sticky.width + 'px';
+    return container;
+  }
 
-      if ((scrollTop + el.sticky.height + el.sticky.margin) > (el.sticky.container.top + el.sticky.container.height)) {
-        el.style.top = (el.sticky.container.top + el.sticky.container.height) - (scrollTop + el.sticky.height) + 'px';
+  getViewportSize() {
+    return {
+      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+    };
+  }
+
+  getScrollTopPosition() {
+    return (window.pageYOffset || document.scrollTop)  - (document.clientTop || 0) || 0;
+  }
+
+  setPosition(el) {
+    if (this.vp.height < el.sticky.rect.height) {
+      return;
+    }
+
+    this.removeStyle(el, [ 'position', 'width', 'top', 'left', 'right', 'bottom']);
+
+    if (this.scrollTop > (el.sticky.rect.top - el.sticky.marginTop)) {
+      this.addStyle(el, {
+        position: 'fixed',
+        width: el.sticky.rect.width + 'px',
+        left: el.sticky.rect.left + 'px',
+        right: 'auto',
+        bottom: 'auto',
+      });
+
+      if ((this.scrollTop + el.sticky.rect.height + el.sticky.marginTop) > (el.sticky.container.rect.top + el.sticky.container.rect.height)) {
+        this.addStyle(el, { top: (el.sticky.container.rect.top + el.sticky.container.rect.height) - (this.scrollTop + el.sticky.rect.height) + 'px' });
       } else {
-        el.style.top = el.sticky.margin + 'px';
+        this.addStyle(el, { top: el.sticky.marginTop + 'px' });
       }
-
     } else {
-      el.classList.remove('sticky');
-      removeStyles(el);
+      this.removeStyle(el, [ 'position', 'width', 'top', 'left', 'right', 'bottom']);
     }
   }
 
-  function removeStyles(el) {
-    el.style.width = null;
-    el.style.top = null;
-    el.style.left = null;
-    el.style.right = null;
-    el.style.bottom = null;
+  addStyle(el, styles) {
+    for (let property in styles) {
+      if (styles.hasOwnProperty(property)) {
+        el.style[property] = styles[property]
+      }
+    }
   }
 
-
-})(window, document);
+  removeStyle(el, properties) {
+    for (let i = 0, len = properties.length; i < len; i++) {
+      el.style[properties[i]] = null;
+    }
+  }
+}
