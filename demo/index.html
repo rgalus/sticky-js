@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Sticky.js</title>
+    <meta name="description" content="Sticky.js is a library written in vanilla javascript. With this library you can easliy add sticky elements to your site which are sticky to whole page or it's parent container">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.3/foundation.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:300" rel="stylesheet">
+
+    <style>
+
+      body,
+      html {
+        height: auto;
+      }
+
+      body {
+        color: #2c3e50;
+        font: 300 1rem 'Ubuntu', sans-serif;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        margin: 0;
+      }
+
+      img {
+        z-index: 2;
+      }
+
+      pre {
+        display: inline-block;
+
+        font-size: 16px;
+        font-family: 'Ubuntu Mono', monospace;
+
+        padding: 15px 30px;
+
+        color: #fff;
+        background: #34495e;
+        border-radius: 4px;
+      }
+
+      pre:not(:last-child) {
+        margin-bottom: 30px;
+      }
+
+      footer {
+        color: #fff;
+        background: #34495e;
+        padding: 100px 0 100px;
+      }
+
+      main {
+        margin-top: 77px;
+      }
+
+      .top-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+      }
+
+      .top-bar,
+      .top-bar ul {
+        color: #fff;
+        background-color: #1abc9c;
+        z-index: 4;
+      }
+
+      .top-bar a {
+        color: #ecf0f1;
+      }
+
+      .top-bar a:hover {
+        color: #fff;
+      }
+
+      .container {
+        margin-top: 77px;
+        background: #ecf0f1;
+
+        padding: 100px 0 100px;
+      }
+
+      *:last-child {
+        margin-bottom: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <header class="top-bar" data-sticky>
+      <div class="top-bar-left">
+        <ul class="menu">
+          <li class="menu-text"><h1>Sticky.js</h1></li>
+        </ul>
+      </div>
+      <div class="top-bar-right">
+        <ul class="menu">
+          <li class=""><a href="https://github.com/rgalus/sticky-js" title="Sticky.js"><i class="fa fa-github fa-2x"></i><strong>GitHub</strong></a></li>
+        </ul>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="container">
+        <div class="row" data-sticky-container>
+          <div class="small-3 columns">
+            <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-margin-top="100">
+          </div>
+          <div class="small-9 columns">
+            <h2>Sticky js</h2>
+            <p>Sticky.js is a responsive library for sticky elements written in vanilla javascript. With this library you can easily add sticky elements to your site which are sticky to whole page or it's parent container.</p>
+            <br>
+            <p>Initialize with javascript</p>
+            <pre>var sticky = new Sticky('.selector');</pre>
+            <br>
+            <p>Sticky to the page markup</p>
+            <pre>&lt;div class="selector"&gt;Sticky element&lt;/div&gt;</pre>
+            <p>Sticky to container markup (nearest parent with [data-sticky-container])</p>
+            <pre>&lt;div data-sticky-container&gt;<br>    &lt;div class="selector"&gt;Sticky element&lt;/div&gt;<br>&lt;/div&gt;</pre>
+            <p>Options are written as inline attributes like data-margin-top="20"></p>
+            <pre>&lt;div data-sticky-container&gt;<br>    &lt;div class="selector" data-margin-top="20"&gt;Sticky element&lt;/div&gt;<br>&lt;/div&gt;</pre>
+            <br>
+            <p>List of options available <a href="https://github.com/rgalus/sticky-js" title="Sticky.js - Available options">here</a>.</p>
+            <p><a href="https://github.com/rgalus/sticky-js/blob/master/LICENSE" title="Sticky.js - License">MIT License</a></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="row column text-center">
+          <h3>Browser compatibility</h3>
+          <p>Library is using ECMAScript 5 features. Full support avaiable on <a href="http://caniuse.com/#search=ECMAScript%205" title="Can i use ECMAScript 5?">caniuse</a>.</p>
+          <br>
+          <ul class="no-bullet">
+            <li>IE 9+</li>
+            <li>Chrome 23+</li>
+            <li>Firefox 21+</li>
+            <li>Safari 6+</li>
+            <li>Opera 15+</li>
+          </ul>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="text-center">
+      <p>Sticky.js</p>
+      <p>Created by <a href="https://github.com/rgalus" title="Sticky.js">Rafał Gałus</a></p>
+      <p><a href="https://github.com/rgalus/sticky-js" title="Sticky.js"><i class="fa fa-github fa-2x"></i></a></p>
+    </footer>
+
+    <script src="../dist/sticky.min.js"></script>
+
+    <script>
+
+      var sticky = new Sticky('[data-sticky]', {});
+
+    </script>
+
+  </body>
+</html>
