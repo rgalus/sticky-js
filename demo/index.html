@@ -33,31 +33,10 @@
         z-index: 2;
       }
 
-      pre {
-        display: inline-block;
-
-        font-size: 16px;
-        font-family: 'Ubuntu Mono', monospace;
-
-        padding: 15px 30px;
-
-        color: #fff;
-        background: #34495e;
-        border-radius: 4px;
-      }
-
-      pre:not(:last-child) {
-        margin-bottom: 30px;
-      }
-
       footer {
         color: #fff;
         background: #34495e;
-        padding: 100px 0 100px;
-      }
-
-      main {
-        margin-top: 77px;
+        padding: 300px 0 100px;
       }
 
       .top-bar {
@@ -84,14 +63,10 @@
       }
 
       .container {
-        margin-top: 77px;
+        margin-top: 200px;
         background: #ecf0f1;
 
-        padding: 100px 0 100px;
-      }
-
-      *:last-child {
-        margin-bottom: 0;
+        height: 500px;
       }
 
     </style>
@@ -113,43 +88,17 @@
 
     <main>
 
-      <section class="container">
-        <div class="row" data-sticky-container>
-          <div class="small-3 columns">
-            <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-margin-top="100">
-          </div>
-          <div class="small-9 columns">
-            <h2>Sticky js</h2>
-            <p>Sticky.js is a responsive library for sticky elements written in vanilla javascript. With this library you can easily add sticky elements to your site which are sticky to whole page or it's parent container.</p>
-            <br>
-            <p>Initialize with javascript</p>
-            <pre>var sticky = new Sticky('.selector');</pre>
-            <br>
-            <p>Sticky to the page markup</p>
-            <pre>&lt;div class="selector"&gt;Sticky element&lt;/div&gt;</pre>
-            <p>Sticky to container markup (nearest parent with [data-sticky-container])</p>
-            <pre>&lt;div data-sticky-container&gt;<br>    &lt;div class="selector"&gt;Sticky element&lt;/div&gt;<br>&lt;/div&gt;</pre>
-            <p>Options are written as inline attributes like data-margin-top="20"></p>
-            <pre>&lt;div data-sticky-container&gt;<br>    &lt;div class="selector" data-margin-top="20"&gt;Sticky element&lt;/div&gt;<br>&lt;/div&gt;</pre>
-            <br>
-            <p>List of options available <a href="https://github.com/rgalus/sticky-js" title="Sticky.js - Available options">here</a>.</p>
-            <p><a href="https://github.com/rgalus/sticky-js/blob/master/LICENSE" title="Sticky.js - License">MIT License</a></p>
-          </div>
+      <section class="container" data-sticky-container>
+        <div class="row column">
+          <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-margin-top="100">
+          <img src="http://placehold.it/250x250" class="float-right" alt="Sticky" data-sticky data-margin-top="100">
         </div>
       </section>
 
-      <section class="container">
-        <div class="row column text-center">
-          <h3>Browser compatibility</h3>
-          <p>Library is using ECMAScript 5 features. Full support avaiable on <a href="http://caniuse.com/#search=ECMAScript%205" title="Can i use ECMAScript 5?">caniuse</a>.</p>
-          <br>
-          <ul class="no-bullet">
-            <li>IE 9+</li>
-            <li>Chrome 23+</li>
-            <li>Firefox 21+</li>
-            <li>Safari 6+</li>
-            <li>Opera 15+</li>
-          </ul>
+      <section class="container" data-sticky-container>
+        <div class="row column">
+          <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-margin-top="100">
+          <img src="http://placehold.it/250x250" class="float-right" alt="Sticky" data-sticky data-margin-top="100">
         </div>
       </section>
 
