@@ -1,5 +1,6 @@
 # sticky-js
 [![npm version](https://badge.fury.io/js/sticky-js.svg)](https://badge.fury.io/js/sticky-js)
+[![Bower version](https://badge.fury.io/bo/sticky.js.svg)](https://badge.fury.io/bo/sticky.js)
 
 [DEMO](https://rgalus.github.io/sticky-js/)
 
