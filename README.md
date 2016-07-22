@@ -1,24 +1,121 @@
 # sticky-js
-Sticky.js is a responsive library for sticky elements written in vanilla javascript. With this library you can easily add sticky elements to your site which are sticky to whole page or it's parent container.
+[![npm version](https://badge.fury.io/js/sticky-js.svg)](https://badge.fury.io/js/sticky-js)
 
-v1.0.0
+[DEMO](https://rgalus.github.io/sticky-js/)
 
+Sticky-js is a library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
 
-### Install
+## Features
+
+- Written in vanilla javascript, no dependencies needed
+- Lightweight (minified: ~3.5kb, gzipped: ~1.15kb)
+- It can be sticky to the entire page or to selected parent container
+- No additional CSS needed
+
+## Install
 ````
 npm install sticky-js
 ````
 
+## Usage
 
-### Documentation
-https://rgalus.github.io/sticky-js/
+Simply include
 
+```html
+<script src="sticky.min.js"></script>
+```
 
-### Available options
+Then have element
+
+```html
+<div class="selector">Sticky element</div>
+```
+
+Initialize in javascript
+
+```js
+var sticky = new Sticky('.selector');
+```
+
+CommonJS
+```js
+var Sticky = require('sticky-js');
+
+var sticky = new Sticky('.selector');
+```
+
+## Examples
+
+Simple
+
+```html
+<div class="topbar">
+  <div class="topbar__brand">logo...</div>
+  <nav class="topbar__nav">nav...</nav>
+</div>
+
+<script src="sticky.min.js"></script>
+<script>
+  var sticky = new Sticky('.topbar');
+</script>
+```
+
+Multiple sticky elements with data-sticky-container and [options](https://github.com/rgalus/sticky-js#available-options)
+
+```html
+<div class="row" data-sticky-container>
+  <div class="medium-2 columns">
+    <img src="http://placehold.it/250x250" class="sticky" data-margin-top="20">
+  </div>
+  <div class="medium-8 columns">
+    <h1>Sticky-js</h1>
+    <p>Lorem ipsum.....</p>
+  </div>
+  <div class="medium-2 columns">
+    <img src="http://placehold.it/250x250" class="sticky" data-margin-top="20">
+  </div>
+</div>
+
+<script src="sticky.min.js"></script>
+<script>
+  var sticky = new Sticky('.sticky');
+</script>
+```
+
+## Methods
+
+Update sticky, e.g. when parent container is dynamically changing height (angular templates etc)
+
+```js
+var sticky = new Sticky('.sticky');
+
+sticky.update();
+```
+
+## Available options
+
 Option | Type | Default | Description
 ------ | ---- | ------- | ----
 data-margin-top | number | 0 | Margin between page and sticky element when scrolled
 
+## Browser Compatibility
 
-##### MIT License
+Library is using ECMAScript 5 features.
 
+* IE 9+
+* Chrome 23+
+* Firefox 21+
+* Safari 6+
+* Opera 15+
+
+[Full support](http://caniuse.com/#search=ECMAScript%205)
+
+* * *
+
+### Website
+
+https://rgalus.github.io/sticky-js/
+
+### License
+
+[MIT License](https://github.com/rgalus/sticky-js/blob/master/LICENSE)
