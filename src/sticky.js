@@ -53,7 +53,6 @@ class Sticky {
   getRect(el) {
     const position = this.getTopLeftPosition(el);
 
-    position.offsetLeft = el.offsetLeft;
     position.width = el.offsetWidth;
     position.height = el.offsetHeight;
 
@@ -61,7 +60,7 @@ class Sticky {
   }
 
   updateRect(el) {
-    this.removeStyle(el, [ 'position', 'width', 'top', 'left', 'right', 'bottom']);
+    this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
 
     el.sticky.rect = this.getRect(el);
     el.sticky.container.rect = this.getRect(el.sticky.container);
@@ -108,15 +107,13 @@ class Sticky {
       return;
     }
 
-    this.removeStyle(el, [ 'position', 'width', 'top', 'left', 'right', 'bottom']);
+    this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
 
     if (this.scrollTop > (el.sticky.rect.top - el.sticky.marginTop)) {
       this.addStyle(el, {
         position: 'fixed',
         width: el.sticky.rect.width + 'px',
         left: el.sticky.rect.left + 'px',
-        right: 'auto',
-        bottom: 'auto',
       });
 
       if ((this.scrollTop + el.sticky.rect.height + el.sticky.marginTop) > (el.sticky.container.rect.top + el.sticky.container.rect.height)) {
@@ -125,7 +122,7 @@ class Sticky {
         this.addStyle(el, { top: el.sticky.marginTop + 'px' });
       }
     } else {
-      this.removeStyle(el, [ 'position', 'width', 'top', 'left', 'right', 'bottom']);
+      this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
     }
   }
 
@@ -139,7 +136,7 @@ class Sticky {
   addStyle(el, styles) {
     for (let property in styles) {
       if (styles.hasOwnProperty(property)) {
-        el.style[property] = styles[property]
+        el.style[property] = styles[property];
       }
     }
   }
