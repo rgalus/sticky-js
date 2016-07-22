@@ -13,8 +13,13 @@ Sticky-js is a library for sticky elements written in vanilla javascript. With t
 - No additional CSS needed
 
 ## Install
+
 ````
 npm install sticky-js
+````
+
+````
+bower install sticky.js
 ````
 
 ## Usage

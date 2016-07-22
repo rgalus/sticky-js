@@ -2,7 +2,7 @@
   "name": "sticky-js",
   "version": "1.0.1",
   "description": "Sticky elements",
-  "main": "dist/sticky.min.js",
+  "main": "dist/sticky.compile.js",
   "scripts": {
     "start": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
