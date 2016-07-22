@@ -1,5 +1,6 @@
 # sticky-js
 [![npm version](https://badge.fury.io/js/sticky-js.svg)](https://badge.fury.io/js/sticky-js)
+[![Bower version](https://badge.fury.io/bo/sticky.js.svg)](https://badge.fury.io/bo/sticky.js)
 
 [DEMO](https://rgalus.github.io/sticky-js/)
 
@@ -13,8 +14,13 @@ Sticky-js is a library for sticky elements written in vanilla javascript. With t
 - No additional CSS needed
 
 ## Install
+
 ````
 npm install sticky-js
+````
+
+````
+bower install sticky.js
 ````
 
 ## Usage

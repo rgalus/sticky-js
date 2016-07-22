@@ -74,7 +74,6 @@ var Sticky = function () {
     value: function getRect(el) {
       var position = this.getTopLeftPosition(el);
 
-      position.offsetLeft = el.offsetLeft;
       position.width = el.offsetWidth;
       position.height = el.offsetHeight;
 
@@ -83,7 +82,7 @@ var Sticky = function () {
   }, {
     key: 'updateRect',
     value: function updateRect(el) {
-      this.removeStyle(el, ['position', 'width', 'top', 'left', 'right', 'bottom']);
+      this.removeStyle(el, ['position', 'width', 'top', 'left']);
 
       el.sticky.rect = this.getRect(el);
       el.sticky.container.rect = this.getRect(el.sticky.container);
@@ -133,15 +132,13 @@ var Sticky = function () {
         return;
       }
 
-      this.removeStyle(el, ['position', 'width', 'top', 'left', 'right', 'bottom']);
+      this.removeStyle(el, ['position', 'width', 'top', 'left']);
 
       if (this.scrollTop > el.sticky.rect.top - el.sticky.marginTop) {
         this.addStyle(el, {
           position: 'fixed',
           width: el.sticky.rect.width + 'px',
-          left: el.sticky.rect.left + 'px',
-          right: 'auto',
-          bottom: 'auto'
+          left: el.sticky.rect.left + 'px'
         });
 
         if (this.scrollTop + el.sticky.rect.height + el.sticky.marginTop > el.sticky.container.rect.top + el.sticky.container.rect.height) {
@@ -150,7 +147,7 @@ var Sticky = function () {
           this.addStyle(el, { top: el.sticky.marginTop + 'px' });
         }
       } else {
-        this.removeStyle(el, ['position', 'width', 'top', 'left', 'right', 'bottom']);
+        this.removeStyle(el, ['position', 'width', 'top', 'left']);
       }
     }
   }, {
@@ -181,3 +178,15 @@ var Sticky = function () {
 
   return Sticky;
 }();
+
+(function (factory) {
+  'use strict';
+
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else if (typeof exports !== 'undefined') {
+    module.exports = factory;
+  } else {
+    window.factory;
+  }
+})(Sticky);
