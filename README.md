@@ -52,20 +52,6 @@ var sticky = new Sticky('.selector');
 
 ## Examples
 
-Simple
-
-```html
-<div class="topbar">
-  <div class="topbar__brand">logo...</div>
-  <nav class="topbar__nav">nav...</nav>
-</div>
-
-<script src="sticky.min.js"></script>
-<script>
-  var sticky = new Sticky('.topbar');
-</script>
-```
-
 Multiple sticky elements with data-sticky-container and [options](https://github.com/rgalus/sticky-js#available-options)
 
 ```html
