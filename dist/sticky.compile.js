@@ -139,12 +139,31 @@ Sticky.prototype = {
     }
   },
 
-  update: function update() {
-    for (var i = 0, len = this.elements.length; i < len; i++) {
-      this.updateRect(this.elements[i]);
-      this.setPosition(this.elements[i]);
+  update: function (_update) {
+    function update() {
+      return _update.apply(this, arguments);
     }
-  },
+
+    update.toString = function () {
+      return _update.toString();
+    };
+
+    return update;
+  }(function () {
+    var _this3 = this;
+
+    for (var i = 0, len = this.elements.length; i < len; i++) {
+      if (typeof this.elements[i].sticky !== 'undefined') {
+        this.updateRect(this.elements[i]);
+        this.setPosition(this.elements[i]);
+      } else {
+        setTimeout(function () {
+          return update.call(_this3);
+        }, 100);
+        break;
+      }
+    }
+  }),
 
   addStyle: function addStyle(el, styles) {
     for (var property in styles) {
