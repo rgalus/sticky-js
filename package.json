@@ -1,6 +1,6 @@
 {
   "name": "sticky-js",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Sticky elements",
   "main": "dist/sticky.compile.js",
   "scripts": {
