@@ -139,31 +139,23 @@ Sticky.prototype = {
     }
   },
 
-  update: function (_update) {
-    function update() {
-      return _update.apply(this, arguments);
-    }
+  update: function update() {
+    var self = this;
 
-    update.toString = function () {
-      return _update.toString();
+    var thisUpdate = function thisUpdate() {
+      self.update();
     };
-
-    return update;
-  }(function () {
-    var _this3 = this;
 
     for (var i = 0, len = this.elements.length; i < len; i++) {
       if (typeof this.elements[i].sticky !== 'undefined') {
         this.updateRect(this.elements[i]);
         this.setPosition(this.elements[i]);
       } else {
-        setTimeout(function () {
-          return update.call(_this3);
-        }, 100);
+        setTimeout(thisUpdate, 100);
         break;
       }
     }
-  }),
+  },
 
   addStyle: function addStyle(el, styles) {
     for (var property in styles) {
