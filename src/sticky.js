@@ -129,12 +129,18 @@ Sticky.prototype = {
   },
 
   update: function () {
+    const self = this;
+
+    const thisUpdate = function () {
+      self.update();
+    };
+
     for (let i = 0, len = this.elements.length; i < len; i++) {
       if (typeof this.elements[i].sticky !== 'undefined') {
         this.updateRect(this.elements[i]);
         this.setPosition(this.elements[i]);
       } else {
-        setTimeout(() => update.call(this), 100);
+        setTimeout(thisUpdate, 100);
         break;
       }
     }
