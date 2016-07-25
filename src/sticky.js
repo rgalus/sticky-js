@@ -130,8 +130,13 @@ Sticky.prototype = {
 
   update: function () {
     for (let i = 0, len = this.elements.length; i < len; i++) {
-      this.updateRect(this.elements[i]);
-      this.setPosition(this.elements[i]);
+      if (typeof this.elements[i].sticky !== 'undefined') {
+        this.updateRect(this.elements[i]);
+        this.setPosition(this.elements[i]);
+      } else {
+        setTimeout(() => update.call(this), 100);
+        break;
+      }
     }
   },
 
@@ -151,7 +156,7 @@ Sticky.prototype = {
 };
 
 if (
-  typeof module === 'object' 
+  typeof module === 'object'
   && typeof module.exports === 'object'
 ) {
   module.exports = exports = Sticky;
