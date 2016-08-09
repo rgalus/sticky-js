@@ -29,27 +29,31 @@ Sticky.prototype = {
   activate: function (el) {
     el.sticky = {};
 
-    el.sticky.marginTop = el.hasAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
-    el.sticky.rect = this.getRect(el);
+    el.sticky.breakpoint = el.hasAttribute('data-sticky-for') ? parseInt(el.getAttribute('data-sticky-for')) : 0;
 
-    // fix when el is image that has not yet loaded and width, height = 0
-    if (el.tagName.toLowerCase() === 'img') {
-      el.onload = () => el.sticky.rect = this.getRect(el);
-    }
+    if (this.vp.width >= el.sticky.breakpoint) {
+      el.sticky.marginTop = el.hasAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
+      el.sticky.rect = this.getRect(el);
 
-    el.sticky.container = this.getContainer(el);
-    el.sticky.container.rect = this.getRect(el.sticky.container);
+      // fix when el is image that has not yet loaded and width, height = 0
+      if (el.tagName.toLowerCase() === 'img') {
+        el.onload = () => el.sticky.rect = this.getRect(el);
+      }
 
-    window.addEventListener('resize', () => {
-      this.vp = this.getViewportSize();
-      this.updateRect(el);
+      el.sticky.container = this.getContainer(el);
+      el.sticky.container.rect = this.getRect(el.sticky.container);
+
+      window.addEventListener('resize', () => {
+        this.vp = this.getViewportSize();
+        this.updateRect(el);
+        this.setPosition(el);
+      });
+
+      window.addEventListener('scroll', () => this.scrollTop = this.getScrollTopPosition());
+      window.addEventListener('scroll', () => this.setPosition(el));
+
       this.setPosition(el);
-    });
-
-    window.addEventListener('scroll', () => this.scrollTop = this.getScrollTopPosition());
-    window.addEventListener('scroll', () => this.setPosition(el));
-
-    this.setPosition(el);
+    }
   },
 
   getRect: function (el) {
