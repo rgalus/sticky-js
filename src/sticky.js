@@ -29,7 +29,7 @@ Sticky.prototype = {
   activate: function (el) {
     el.sticky = {};
 
-    el.sticky.marginTop = el.getAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
+    el.sticky.marginTop = el.hasAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
     el.sticky.rect = this.getRect(el);
 
     // fix when el is image that has not yet loaded and width, height = 0
