@@ -5,7 +5,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var Sticky = function Sticky(selector) {
   var sticky = this;
 
-  sticky.version = '1.0.5';
+  sticky.version = '1.0.6';
 
   sticky.selector = selector;
 
