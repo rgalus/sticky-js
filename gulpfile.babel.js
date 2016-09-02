@@ -80,11 +80,15 @@ export function serve() {
 /*
  * Builder
  */
-const build = gulp.series(clean, js, serve);
+const build = gulp.series(clean, js);
+export { build };
+
+const server = gulp.series(clean, js, serve);
+export { server };
 
 
 
 /*
  * Export a default task
  */
-export default build;
+export default server;
