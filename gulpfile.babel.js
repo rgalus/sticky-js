@@ -60,13 +60,18 @@ export function js() {
  * Serve
  */
 export function serve() {
+  gulp.watch('./src/*.js', gulp.series(js))
+
   gulp.watch('./demo/*.html').on('change', browserSync.reload);
-  gulp.watch('./src/*.js', gulp.series(js)).on('change', browserSync.reload);
+  gulp.watch('./dist/*.js').on('change', browserSync.reload);
 
   return browserSync.init({
     server: {
-      baseDir: "./demo/"
-    }
+      baseDir: './',
+      directory: true,
+    },
+
+    startPath: '/demo/index.html',
   });
 }
 
