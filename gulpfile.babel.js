@@ -1,8 +1,10 @@
 'use strict';
 
+
 //
 // Gulp
 // --------------------------------------------------
+
 
 
 /*
@@ -15,6 +17,14 @@ import rename from 'gulp-rename';
 import uglify from 'gulp-uglify';
 import size from 'gulp-size';
 import gzip from 'gulp-gzip';
+import browser_sync from 'browser-sync';
+
+
+
+/*
+ * Create browserSync instance
+ */
+const browserSync = browser_sync.create();
 
 
 
@@ -27,7 +37,7 @@ export { clean };
 
 
 /*
- * Build
+ * Compile js
  */
 export function js() {
   return gulp.src('./src/sticky.js')
@@ -47,9 +57,25 @@ export function js() {
 
 
 /*
+ * Serve
+ */
+export function serve() {
+  gulp.watch('./demo/*.html').on('change', browserSync.reload);
+  gulp.watch('./src/*.js', gulp.series(js)).on('change', browserSync.reload);
+
+  return browserSync.init({
+    server: {
+      baseDir: "./demo/"
+    }
+  });
+}
+
+
+
+/*
  * Builder
  */
-const build = gulp.series(clean, js);
+const build = gulp.series(clean, js, serve);
 
 
 
