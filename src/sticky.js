@@ -3,27 +3,39 @@ const Sticky = function (selector) {
   const sticky = this;
 
   sticky.version = '1.0.5';
-  
+
   sticky.selector = selector;
 
   sticky.vp = sticky.getViewportSize();
   sticky.scrollTop = sticky.getScrollTopPosition();
+  sticky.elements = [];
 
-  sticky.initialize();
+  sticky.run();
 };
 
 Sticky.prototype = {
-  initialize: function () {
-    this.elements = document.querySelectorAll(this.selector);
+  run: function () {
+    const elements = document.querySelectorAll(this.selector);
 
-    // initialize sticky only when dom is fully loaded
+    // run sticky only when dom is fully loaded
     const DOMContentLoaded = setInterval(() => {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        for (let i = 0, len = this.elements.length; i < len; i++) {
-          this.activate(this.elements[i]);
-        }
-
         clearInterval(DOMContentLoaded);
+
+        this.iterate(elements, (el) => this.activate(el));
+
+        window.addEventListener('scroll', () => {
+          this.scrollTop = this.getScrollTopPosition();
+          this.setPosition();
+        });
+
+        window.addEventListener('resize', () => {
+          this.vp = this.getViewportSize();
+          this.updatePosition();
+        });
+
+        this.isSet = true;
+        this.setPosition();
       }
     }, 100);
   },
@@ -31,33 +43,38 @@ Sticky.prototype = {
   activate: function (el) {
     el.sticky = {};
 
-    el.sticky.breakpoint = el.hasAttribute('data-sticky-for') ? parseInt(el.getAttribute('data-sticky-for')) : 0;
+    el.sticky.active = false;
 
-    if (this.vp.width >= el.sticky.breakpoint) {
-      this.isSet = true;
+    el.sticky.breakpoint = parseInt(el.getAttribute('data-sticky-for')) || 0;
+    el.sticky.marginTop = parseInt(el.getAttribute('data-margin-top')) || 0;
 
-      el.sticky.marginTop = el.hasAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
-      el.sticky.rect = this.getRect(el);
+    el.sticky.rect = this.getRect(el);
 
-      // fix when el is image that has not yet loaded and width, height = 0
-      if (el.tagName.toLowerCase() === 'img') {
-        el.onload = () => el.sticky.rect = this.getRect(el);
-      }
-
-      el.sticky.container = this.getContainer(el);
-      el.sticky.container.rect = this.getRect(el.sticky.container);
-
-      window.addEventListener('resize', () => {
-        this.vp = this.getViewportSize();
-        this.updateRect(el);
-        this.setPosition(el);
-      });
-
-      window.addEventListener('scroll', () => this.scrollTop = this.getScrollTopPosition());
-      window.addEventListener('scroll', () => this.setPosition(el));
-
-      this.setPosition(el);
+    // fix when el is image that has not yet loaded and width, height = 0
+    if (el.tagName.toLowerCase() === 'img') {
+      el.onload = () => el.sticky.rect = this.getRect(el);
     }
+
+    el.sticky.container = this.getContainer(el);
+    el.sticky.container.rect = this.getRect(el.sticky.container);
+
+    if (el.sticky.breakpoint < this.vp.width && !el.sticky.active) {
+      el.sticky.active = true;
+    }
+
+    window.addEventListener('resize', () => {
+      this.vp = this.getViewportSize();
+
+      if (el.sticky.breakpoint < this.vp.width && !el.sticky.active) {
+        el.sticky.active = true;
+        this.setPosition();
+      } else if (el.sticky.breakpoint >= this.vp.width && el.sticky.active) {
+        el.sticky.active = false;
+        this.setPosition();
+      }
+    });
+
+    this.elements.push(el);
   },
 
   getRect: function (el) {
@@ -69,11 +86,13 @@ Sticky.prototype = {
     return position;
   },
 
-  updateRect: function (el) {
-    this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
+  updateRect: function () {
+    this.iterate(this.elements, (el) => {
+      this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
 
-    el.sticky.rect = this.getRect(el);
-    el.sticky.container.rect = this.getRect(el.sticky.container);
+      el.sticky.rect = this.getRect(el);
+      el.sticky.container.rect = this.getRect(el.sticky.container);
+    });
   },
 
   getTopLeftPosition: function (el) {
@@ -112,28 +131,40 @@ Sticky.prototype = {
     return (window.pageYOffset || document.scrollTop)  - (document.clientTop || 0) || 0;
   },
 
-  setPosition: function (el) {
-    if (this.vp.height < el.sticky.rect.height) {
-      return;
-    }
-
-    this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
-
-    if (this.scrollTop > (el.sticky.rect.top - el.sticky.marginTop)) {
-      this.addStyle(el, {
-        position: 'fixed',
-        width: el.sticky.rect.width + 'px',
-        left: el.sticky.rect.left + 'px',
-      });
-
-      if ((this.scrollTop + el.sticky.rect.height + el.sticky.marginTop) > (el.sticky.container.rect.top + el.sticky.container.rect.height)) {
-        this.addStyle(el, { top: (el.sticky.container.rect.top + el.sticky.container.rect.height) - (this.scrollTop + el.sticky.rect.height) + 'px' });
-      } else {
-        this.addStyle(el, { top: el.sticky.marginTop + 'px' });
-      }
-    } else {
+  setPosition: function () {
+    this.iterate(this.elements, (el) => {
       this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
-    }
+
+      if ((this.vp.height < el.sticky.rect.height) || !el.sticky.active) {
+        return;
+      }
+
+      if (this.scrollTop > (el.sticky.rect.top - el.sticky.marginTop)) {
+        this.addStyle(el, {
+          position: 'fixed',
+          width: el.sticky.rect.width + 'px',
+          left: el.sticky.rect.left + 'px',
+        });
+
+        if (
+          (this.scrollTop + el.sticky.rect.height + el.sticky.marginTop)
+          > (el.sticky.container.rect.top + el.sticky.container.rect.height)
+        ) {
+          this.addStyle(el, {
+            top: (el.sticky.container.rect.top + el.sticky.container.rect.height) - (this.scrollTop + el.sticky.rect.height) + 'px' }
+          );
+        } else {
+          this.addStyle(el, { top: el.sticky.marginTop + 'px' });
+        }
+      } else {
+        this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
+      }
+    });
+  },
+
+  updatePosition: function () {
+    this.updateRect();
+    this.setPosition();
   },
 
   update: function () {
@@ -144,15 +175,13 @@ Sticky.prototype = {
         self.update();
       };
 
-      for (let i = 0, len = this.elements.length; i < len; i++) {
-        if (typeof this.elements[i].sticky !== 'undefined') {
-          this.updateRect(this.elements[i]);
-          this.setPosition(this.elements[i]);
+      this.iterate(this.elements, (element) => {
+        if (typeof element.sticky !== 'undefined') {
+          this.updatePosition();
         } else {
           setTimeout(thisUpdate, 100);
-          break;
         }
-      }
+      });
     }
   },
 
@@ -165,10 +194,14 @@ Sticky.prototype = {
   },
 
   removeStyle: function (el, properties) {
-    for (let i = 0, len = properties.length; i < len; i++) {
-      el.style[properties[i]] = null;
-    }
+    this.iterate(properties, (property) => el.style[property] = null);
   },
+
+  iterate: function (array, callback) {
+    for (let i = 0, len = array.length; i < len; i++) {
+      callback(array[i]);
+    }
+  }
 };
 
 if (
