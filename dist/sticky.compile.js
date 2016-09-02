@@ -5,28 +5,44 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var Sticky = function Sticky(selector) {
   var sticky = this;
 
+  sticky.version = '1.0.6';
+
   sticky.selector = selector;
 
   sticky.vp = sticky.getViewportSize();
   sticky.scrollTop = sticky.getScrollTopPosition();
+  sticky.elements = [];
 
-  sticky.initialize();
+  sticky.run();
 };
 
 Sticky.prototype = {
-  initialize: function initialize() {
+  run: function run() {
     var _this = this;
 
-    this.elements = document.querySelectorAll(this.selector);
+    var elements = document.querySelectorAll(this.selector);
 
-    // initialize sticky only when dom is fully loaded
+    // run sticky only when dom is fully loaded
     var DOMContentLoaded = setInterval(function () {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        for (var i = 0, len = _this.elements.length; i < len; i++) {
-          _this.activate(_this.elements[i]);
-        }
-
         clearInterval(DOMContentLoaded);
+
+        _this.iterate(elements, function (el) {
+          return _this.activate(el);
+        });
+
+        window.addEventListener('scroll', function () {
+          _this.scrollTop = _this.getScrollTopPosition();
+          _this.setPosition();
+        });
+
+        window.addEventListener('resize', function () {
+          _this.vp = _this.getViewportSize();
+          _this.updatePosition();
+        });
+
+        _this.isSet = true;
+        _this.setPosition();
       }
     }, 100);
   },
@@ -36,7 +52,11 @@ Sticky.prototype = {
 
     el.sticky = {};
 
-    el.sticky.marginTop = el.getAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
+    el.sticky.active = false;
+
+    el.sticky.breakpoint = parseInt(el.getAttribute('data-sticky-for')) || 0;
+    el.sticky.marginTop = parseInt(el.getAttribute('data-margin-top')) || 0;
+
     el.sticky.rect = this.getRect(el);
 
     // fix when el is image that has not yet loaded and width, height = 0
@@ -49,20 +69,23 @@ Sticky.prototype = {
     el.sticky.container = this.getContainer(el);
     el.sticky.container.rect = this.getRect(el.sticky.container);
 
+    if (el.sticky.breakpoint < this.vp.width && !el.sticky.active) {
+      el.sticky.active = true;
+    }
+
     window.addEventListener('resize', function () {
       _this2.vp = _this2.getViewportSize();
-      _this2.updateRect(el);
-      _this2.setPosition(el);
+
+      if (el.sticky.breakpoint < _this2.vp.width && !el.sticky.active) {
+        el.sticky.active = true;
+        _this2.setPosition();
+      } else if (el.sticky.breakpoint >= _this2.vp.width && el.sticky.active) {
+        el.sticky.active = false;
+        _this2.setPosition();
+      }
     });
 
-    window.addEventListener('scroll', function () {
-      return _this2.scrollTop = _this2.getScrollTopPosition();
-    });
-    window.addEventListener('scroll', function () {
-      return _this2.setPosition(el);
-    });
-
-    this.setPosition(el);
+    this.elements.push(el);
   },
 
   getRect: function getRect(el) {
@@ -74,11 +97,15 @@ Sticky.prototype = {
     return position;
   },
 
-  updateRect: function updateRect(el) {
-    this.removeStyle(el, ['position', 'width', 'top', 'left']);
+  updateRect: function updateRect() {
+    var _this3 = this;
 
-    el.sticky.rect = this.getRect(el);
-    el.sticky.container.rect = this.getRect(el.sticky.container);
+    this.iterate(this.elements, function (el) {
+      _this3.removeStyle(el, ['position', 'width', 'top', 'left']);
+
+      el.sticky.rect = _this3.getRect(el);
+      el.sticky.container.rect = _this3.getRect(el.sticky.container);
+    });
   },
 
   getTopLeftPosition: function getTopLeftPosition(el) {
@@ -115,45 +142,59 @@ Sticky.prototype = {
     return (window.pageYOffset || document.scrollTop) - (document.clientTop || 0) || 0;
   },
 
-  setPosition: function setPosition(el) {
-    if (this.vp.height < el.sticky.rect.height) {
-      return;
-    }
+  setPosition: function setPosition() {
+    var _this4 = this;
 
-    this.removeStyle(el, ['position', 'width', 'top', 'left']);
+    this.iterate(this.elements, function (el) {
+      _this4.removeStyle(el, ['position', 'width', 'top', 'left']);
 
-    if (this.scrollTop > el.sticky.rect.top - el.sticky.marginTop) {
-      this.addStyle(el, {
-        position: 'fixed',
-        width: el.sticky.rect.width + 'px',
-        left: el.sticky.rect.left + 'px'
-      });
-
-      if (this.scrollTop + el.sticky.rect.height + el.sticky.marginTop > el.sticky.container.rect.top + el.sticky.container.rect.height) {
-        this.addStyle(el, { top: el.sticky.container.rect.top + el.sticky.container.rect.height - (this.scrollTop + el.sticky.rect.height) + 'px' });
-      } else {
-        this.addStyle(el, { top: el.sticky.marginTop + 'px' });
+      if (_this4.vp.height < el.sticky.rect.height || !el.sticky.active) {
+        return;
       }
-    } else {
-      this.removeStyle(el, ['position', 'width', 'top', 'left']);
-    }
+
+      if (_this4.scrollTop > el.sticky.rect.top - el.sticky.marginTop) {
+        _this4.addStyle(el, {
+          position: 'fixed',
+          width: el.sticky.rect.width + 'px',
+          left: el.sticky.rect.left + 'px'
+        });
+
+        if (_this4.scrollTop + el.sticky.rect.height + el.sticky.marginTop > el.sticky.container.rect.top + el.sticky.container.rect.height) {
+          _this4.addStyle(el, {
+            top: el.sticky.container.rect.top + el.sticky.container.rect.height - (_this4.scrollTop + el.sticky.rect.height) + 'px' });
+        } else {
+          _this4.addStyle(el, { top: el.sticky.marginTop + 'px' });
+        }
+      } else {
+        _this4.removeStyle(el, ['position', 'width', 'top', 'left']);
+      }
+    });
+  },
+
+  updatePosition: function updatePosition() {
+    this.updateRect();
+    this.setPosition();
   },
 
   update: function update() {
-    var self = this;
+    var _this5 = this;
 
-    var thisUpdate = function thisUpdate() {
-      self.update();
-    };
+    if (this.isSet) {
+      (function () {
+        var self = _this5;
 
-    for (var i = 0, len = this.elements.length; i < len; i++) {
-      if (typeof this.elements[i].sticky !== 'undefined') {
-        this.updateRect(this.elements[i]);
-        this.setPosition(this.elements[i]);
-      } else {
-        setTimeout(thisUpdate, 100);
-        break;
-      }
+        var thisUpdate = function thisUpdate() {
+          self.update();
+        };
+
+        _this5.iterate(_this5.elements, function (element) {
+          if (typeof element.sticky !== 'undefined') {
+            _this5.updatePosition();
+          } else {
+            setTimeout(thisUpdate, 100);
+          }
+        });
+      })();
     }
   },
 
@@ -166,8 +207,14 @@ Sticky.prototype = {
   },
 
   removeStyle: function removeStyle(el, properties) {
-    for (var i = 0, len = properties.length; i < len; i++) {
-      el.style[properties[i]] = null;
+    this.iterate(properties, function (property) {
+      return el.style[property] = null;
+    });
+  },
+
+  iterate: function iterate(array, callback) {
+    for (var i = 0, len = array.length; i < len; i++) {
+      callback(array[i]);
     }
   }
 };
