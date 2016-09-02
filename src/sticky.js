@@ -2,6 +2,8 @@
 const Sticky = function (selector) {
   const sticky = this;
 
+  sticky.version = '1.0.5';
+  
   sticky.selector = selector;
 
   sticky.vp = sticky.getViewportSize();

@@ -5,6 +5,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var Sticky = function Sticky(selector) {
   var sticky = this;
 
+  sticky.version = '1.0.5';
+
   sticky.selector = selector;
 
   sticky.vp = sticky.getViewportSize();
@@ -36,33 +38,39 @@ Sticky.prototype = {
 
     el.sticky = {};
 
-    el.sticky.marginTop = el.getAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
-    el.sticky.rect = this.getRect(el);
+    el.sticky.breakpoint = el.hasAttribute('data-sticky-for') ? parseInt(el.getAttribute('data-sticky-for')) : 0;
 
-    // fix when el is image that has not yet loaded and width, height = 0
-    if (el.tagName.toLowerCase() === 'img') {
-      el.onload = function () {
-        return el.sticky.rect = _this2.getRect(el);
-      };
+    if (this.vp.width >= el.sticky.breakpoint) {
+      this.isSet = true;
+
+      el.sticky.marginTop = el.hasAttribute('data-margin-top') ? parseInt(el.getAttribute('data-margin-top')) : 0;
+      el.sticky.rect = this.getRect(el);
+
+      // fix when el is image that has not yet loaded and width, height = 0
+      if (el.tagName.toLowerCase() === 'img') {
+        el.onload = function () {
+          return el.sticky.rect = _this2.getRect(el);
+        };
+      }
+
+      el.sticky.container = this.getContainer(el);
+      el.sticky.container.rect = this.getRect(el.sticky.container);
+
+      window.addEventListener('resize', function () {
+        _this2.vp = _this2.getViewportSize();
+        _this2.updateRect(el);
+        _this2.setPosition(el);
+      });
+
+      window.addEventListener('scroll', function () {
+        return _this2.scrollTop = _this2.getScrollTopPosition();
+      });
+      window.addEventListener('scroll', function () {
+        return _this2.setPosition(el);
+      });
+
+      this.setPosition(el);
     }
-
-    el.sticky.container = this.getContainer(el);
-    el.sticky.container.rect = this.getRect(el.sticky.container);
-
-    window.addEventListener('resize', function () {
-      _this2.vp = _this2.getViewportSize();
-      _this2.updateRect(el);
-      _this2.setPosition(el);
-    });
-
-    window.addEventListener('scroll', function () {
-      return _this2.scrollTop = _this2.getScrollTopPosition();
-    });
-    window.addEventListener('scroll', function () {
-      return _this2.setPosition(el);
-    });
-
-    this.setPosition(el);
   },
 
   getRect: function getRect(el) {
@@ -140,20 +148,26 @@ Sticky.prototype = {
   },
 
   update: function update() {
-    var self = this;
+    var _this3 = this;
 
-    var thisUpdate = function thisUpdate() {
-      self.update();
-    };
+    if (this.isSet) {
+      (function () {
+        var self = _this3;
 
-    for (var i = 0, len = this.elements.length; i < len; i++) {
-      if (typeof this.elements[i].sticky !== 'undefined') {
-        this.updateRect(this.elements[i]);
-        this.setPosition(this.elements[i]);
-      } else {
-        setTimeout(thisUpdate, 100);
-        break;
-      }
+        var thisUpdate = function thisUpdate() {
+          self.update();
+        };
+
+        for (var i = 0, len = _this3.elements.length; i < len; i++) {
+          if (typeof _this3.elements[i].sticky !== 'undefined') {
+            _this3.updateRect(_this3.elements[i]);
+            _this3.setPosition(_this3.elements[i]);
+          } else {
+            setTimeout(thisUpdate, 100);
+            break;
+          }
+        }
+      })();
     }
   },
 
