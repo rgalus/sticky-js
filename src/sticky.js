@@ -47,6 +47,7 @@ Sticky.prototype = {
 
     el.sticky.breakpoint = parseInt(el.getAttribute('data-sticky-for')) || 0;
     el.sticky.marginTop = parseInt(el.getAttribute('data-margin-top')) || 0;
+    el.sticky.class = el.getAttribute('data-sticky-class') || false;
 
     el.sticky.rect = this.getRect(el);
 
@@ -150,13 +151,20 @@ Sticky.prototype = {
           (this.scrollTop + el.sticky.rect.height + el.sticky.marginTop)
           > (el.sticky.container.rect.top + el.sticky.container.rect.height)
         ) {
+
+          if (el.sticky.class) el.classList.remove(el.sticky.class);
+
           this.addStyle(el, {
             top: (el.sticky.container.rect.top + el.sticky.container.rect.height) - (this.scrollTop + el.sticky.rect.height) + 'px' }
           );
         } else {
+          if (el.sticky.class) el.classList.add(el.sticky.class);
+
           this.addStyle(el, { top: el.sticky.marginTop + 'px' });
         }
       } else {
+        if (el.sticky.class) el.classList.remove(el.sticky.class);
+
         this.removeStyle(el, [ 'position', 'width', 'top', 'left' ]);
       }
     });
