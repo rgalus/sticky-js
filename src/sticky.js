@@ -2,7 +2,7 @@
 const Sticky = function (selector) {
   const sticky = this;
 
-  sticky.version = '1.0.6';
+  sticky.version = '1.0.7';
 
   sticky.selector = selector;
 
