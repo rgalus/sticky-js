@@ -43,6 +43,12 @@ Initialize in javascript
 var sticky = new Sticky('.selector');
 ```
 
+Syntax
+
+```js
+new Sticky([selector:string], [global options:object])
+```
+
 CommonJS
 ```js
 var Sticky = require('sticky-js');
@@ -57,14 +63,14 @@ Multiple sticky elements with data-sticky-container and [options](https://github
 ```html
 <div class="row" data-sticky-container>
   <div class="medium-2 columns">
-    <img src="http://placehold.it/250x250" class="sticky" data-margin-top="20">
+    <img src="http://placehold.it/250x250" class="sticky" data-margin-top="20" data-sticky-for="1023" data-sticky-class="is-sticky">
   </div>
   <div class="medium-8 columns">
     <h1>Sticky-js</h1>
     <p>Lorem ipsum.....</p>
   </div>
   <div class="medium-2 columns">
-    <img src="http://placehold.it/250x250" class="sticky" data-margin-top="20">
+    <img src="http://placehold.it/250x250" class="sticky" data-margin-top="20" data-sticky-for="1023" data-sticky-class="is-sticky">
   </div>
 </div>
 
@@ -76,7 +82,7 @@ Multiple sticky elements with data-sticky-container and [options](https://github
 
 ## Methods
 
-Update sticky, e.g. when parent container is dynamically changing height (angular templates etc)
+Update sticky, e.g. when parent container (data-sticky-container) change height
 
 ```js
 var sticky = new Sticky('.sticky');
@@ -91,6 +97,14 @@ Option | Type | Default | Description
 data-margin-top | number | 0 | Margin between page and sticky element when scrolled
 data-sticky-for | number | 0 | Breakpoint which when is bigger than viewport width, sticky is activated and when is smaller, then sticky is destroyed
 data-sticky-class | string | null | Class added to sticky element when it is stuck
+
+### Development
+
+Clone this repository and run
+
+```js
+npm start
+```
 
 ## Browser Compatibility
 
