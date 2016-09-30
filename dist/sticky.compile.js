@@ -1,232 +1,367 @@
-'use strict';
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+/**
+ * Sticky.js
+ * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
+ *
+ * @version 1.0.7
+ * @author Rafal Galus <biuro@rafalgalus.pl>
+ * @website https://rgalus.github.io/sticky-js/
+ * @repo https://github.com/rgalus/sticky-js
+ * @license https://github.com/rgalus/sticky-js/blob/master/LICENSE
+ */
 
-var Sticky = function Sticky(selector) {
-  var sticky = this;
+var Sticky = function () {
+  /**
+   * Sticky instance constructor.
+   * @constructor
+   * @param {string} selector - Selector which we can find elements.
+   * @param {string} options - Global options for sticky elements (could be overwritten by data-{option}="" attributes).
+   */
+  function Sticky() {
+    var selector = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-  sticky.version = '1.0.6';
+    _classCallCheck(this, Sticky);
 
-  sticky.selector = selector;
+    this.selector = selector;
+    this.elements = [];
 
-  sticky.vp = sticky.getViewportSize();
-  sticky.scrollTop = sticky.getScrollTopPosition();
-  sticky.elements = [];
+    this.version = '1.0.7';
 
-  sticky.run();
-};
+    this.vp = this.getViewportSize();
+    this.scrollTop = this.getScrollTopPosition();
 
-Sticky.prototype = {
-  run: function run() {
+    this.options = {
+      marginTop: options.marginTop || 0,
+      stickyFor: options.stickFor || 0,
+      stickyClass: options.stickyClass || null
+    };
+
+    this.run();
+  }
+
+  /**
+   * Activate Sticky library
+   * @function
+   */
+
+
+  Sticky.prototype.run = function run() {
     var _this = this;
 
-    var elements = document.querySelectorAll(this.selector);
-
-    // run sticky only when dom is fully loaded
+    // wait for DOM content to be fully loaded
     var DOMContentLoaded = setInterval(function () {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        // now we are sure that dom content has been loaded
         clearInterval(DOMContentLoaded);
 
-        _this.iterate(elements, function (el) {
-          return _this.activate(el);
+        var elements = document.querySelectorAll(_this.selector);
+        _this.forEach(elements, function (element) {
+          return _this.renderElement(element);
         });
-
-        window.addEventListener('scroll', function () {
-          _this.scrollTop = _this.getScrollTopPosition();
-          _this.setPosition();
-        });
-
-        window.addEventListener('resize', function () {
-          _this.vp = _this.getViewportSize();
-          _this.updatePosition();
-        });
-
-        _this.isSet = true;
-        _this.setPosition();
       }
-    }, 100);
-  },
+    }, 10);
+  };
 
-  activate: function activate(el) {
+  /**
+   * Renders sticky element
+   * @function
+   * @param {node} element - Sticky element to be rendered.
+   */
+
+
+  Sticky.prototype.renderElement = function renderElement(element) {
     var _this2 = this;
 
-    el.sticky = {};
+    // create container where are needed variables are placed
+    element.sticky = {};
 
-    el.sticky.active = false;
+    // set default variables
+    element.sticky.active = false;
 
-    el.sticky.breakpoint = parseInt(el.getAttribute('data-sticky-for')) || 0;
-    el.sticky.marginTop = parseInt(el.getAttribute('data-margin-top')) || 0;
-    el.sticky.class = el.getAttribute('data-sticky-class') || false;
+    element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
+    element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
+    element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
 
-    el.sticky.rect = this.getRect(el);
+    element.sticky.container = this.getStickyContainer(element);
+    element.sticky.container.rect = this.getRectangle(element.sticky.container);
+
+    element.sticky.rect = this.getRectangle(element);
 
     // fix when el is image that has not yet loaded and width, height = 0
-    if (el.tagName.toLowerCase() === 'img') {
-      el.onload = function () {
-        return el.sticky.rect = _this2.getRect(el);
+    if (element.tagName.toLowerCase === 'img') {
+      element.onload = function () {
+        return element.sticky.rect = _this2.getRectangle(element);
       };
     }
 
-    el.sticky.container = this.getContainer(el);
-    el.sticky.container.rect = this.getRect(el.sticky.container);
+    // activate rendered element
+    this.activate(element);
+  };
 
-    if (el.sticky.breakpoint < this.vp.width && !el.sticky.active) {
-      el.sticky.active = true;
+  /**
+   * Activate element if breakpoint
+   * @function
+   * @param {node} element - Sticky element to be activated.
+   */
+
+
+  Sticky.prototype.activate = function activate(element) {
+    if (element.sticky.stickyFor < this.vp.width && !element.sticky.active) {
+      element.sticky.active = true;
     }
 
-    window.addEventListener('resize', function () {
-      _this2.vp = _this2.getViewportSize();
+    this.addStyle(element, {
+      '-webkit-transform': 'translate3d(0, 0, 0)',
+      '-ms-transform': 'translate3d(0, 0, 0)',
+      'transform': 'translate3d(0, 0, 0)',
 
-      if (el.sticky.breakpoint < _this2.vp.width && !el.sticky.active) {
-        el.sticky.active = true;
-        _this2.setPosition();
-      } else if (el.sticky.breakpoint >= _this2.vp.width && el.sticky.active) {
-        el.sticky.active = false;
-        _this2.setPosition();
-      }
+      '-webkit-perspective': 1000,
+      '-ms-perspective': 1000,
+      'perspective': 1000,
+
+      '-webkit-backface-visibility': 'hidden',
+      'backface-visibility': 'hidden'
     });
 
-    this.elements.push(el);
-  },
+    this.elements.push(element);
 
-  getRect: function getRect(el) {
-    var position = this.getTopLeftPosition(el);
+    this.initResizeEvents(element);
+    this.initScrollEvents(element);
+  };
 
-    position.width = el.offsetWidth;
-    position.height = el.offsetHeight;
-
-    return position;
-  },
-
-  updateRect: function updateRect() {
+  Sticky.prototype.initResizeEvents = function initResizeEvents(element) {
     var _this3 = this;
 
-    this.iterate(this.elements, function (el) {
-      _this3.removeStyle(el, ['position', 'width', 'top', 'left']);
+    element.sticky.resizeListener = function () {
+      return _this3.onResizeEvents(element);
+    };
+    window.addEventListener('resize', element.sticky.resizeListener);
+  };
 
-      el.sticky.rect = _this3.getRect(el);
-      el.sticky.container.rect = _this3.getRect(el.sticky.container);
+  Sticky.prototype.onResizeEvents = function onResizeEvents(element) {
+    this.vp = this.getViewportSize();
+
+    element.sticky.rect = this.getRectangle(element);
+    element.sticky.container.rect = this.getRectangle(element.sticky.container);
+
+    if (element.sticky.stickyFor < this.vp.width && !element.sticky.active) {
+      element.sticky.active = true;
+    } else if (element.sticky.stickyFor >= this.vp.width && element.sticky.active) {
+      element.sticky.active = false;
+    }
+
+    this.setPosition(element);
+  };
+
+  Sticky.prototype.initScrollEvents = function initScrollEvents(element) {
+    var _this4 = this;
+
+    element.sticky.scrollListener = function () {
+      return _this4.onScrollEvents(element);
+    };
+    window.addEventListener('scroll', element.sticky.scrollListener);
+  };
+
+  Sticky.prototype.onScrollEvents = function onScrollEvents(element) {
+    this.scrollTop = this.getScrollTopPosition();
+
+    if (element.sticky.active) {
+      this.setPosition(element);
+    }
+  };
+
+  /**
+   * Function
+   * @function
+   * @param {node} element - Element which sticky container are looked for.
+   * @return {node} element - Sticky container
+   */
+
+
+  Sticky.prototype.setPosition = function setPosition(element) {
+    this.removeStyle(element, ['position', 'width', 'top', 'left']);
+
+    if (this.vp.height < element.sticky.rect.height || !element.sticky.active) {
+      return;
+    }
+
+    if (!element.sticky.rect.width) {
+      element.sticky.rect = this.getRectangle(element);
+    }
+
+    if (this.scrollTop > element.sticky.rect.top - element.sticky.marginTop) {
+      this.addStyle(element, {
+        position: 'fixed',
+        width: element.sticky.rect.width + 'px',
+        left: element.sticky.rect.left + 'px'
+      });
+
+      if (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop > element.sticky.container.rect.top + element.sticky.container.rect.height) {
+
+        if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
+
+        this.addStyle(element, {
+          top: element.sticky.container.rect.top + element.sticky.container.rect.height - (this.scrollTop + element.sticky.rect.height) + 'px' });
+      } else {
+        if (element.sticky.stickyClass) element.classList.add(element.sticky.stickyClass);
+
+        this.addStyle(element, { top: element.sticky.marginTop + 'px' });
+      }
+    } else {
+      if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
+
+      this.removeStyle(element, ['position', 'width', 'top', 'left']);
+    }
+  };
+
+  /**
+   * Function that updates element sticky rectangle (with parent container) and then update position;
+   * @function
+   */
+
+
+  Sticky.prototype.update = function update() {
+    var _this5 = this;
+
+    this.forEach(this.elements, function (element) {
+      element.sticky.rect = _this5.getRectangle(element);
+      element.sticky.container.rect = _this5.getRectangle(element.sticky.container);
+
+      _this5.setPosition(element);
     });
-  },
+  };
 
-  getTopLeftPosition: function getTopLeftPosition(el) {
-    var top = 0,
-        left = 0;
+  /**
+   * Function that returns element in which sticky is stuck (if is not specified, then it is sticky document body);
+   * @function
+   * @param {node} element - Element which sticky container are looked for.
+   * @return {node} element - Sticky container
+   */
 
-    do {
-      top += el.offsetTop || 0;
-      left += el.offsetLeft || 0;
-      el = el.offsetParent;
-    } while (el);
 
-    return { top: top, left: left };
-  },
+  Sticky.prototype.getStickyContainer = function getStickyContainer(element) {
+    var container = element;
 
-  getContainer: function getContainer(el) {
-    var container = el;
-
-    while (typeof container.getAttribute('data-sticky-container') !== 'string' && container !== document.documentElement) {
+    while (!container.hasAttribute('data-sticky-container') && container !== document.querySelector('body')) {
       container = container.parentNode;
     }
 
     return container;
-  },
+  };
 
-  getViewportSize: function getViewportSize() {
+  /**
+   * Function that returns element rectangle & position (width, height, top, left).
+   * @function
+   * @param {node} element - Element which position & rectangle are calculated.
+   * @return {object}
+   */
+
+
+  Sticky.prototype.getRectangle = function getRectangle(element) {
+    this.removeStyle(element, ['position', 'width', 'top', 'left']);
+
+    var top = 0;
+    var left = 0;
+    var width = 0;
+    var height = 0;
+
+    width = element.offsetWidth;
+    height = element.offsetHeight;
+
+    do {
+      top += element.offsetTop || 0;
+      left += element.offsetLeft || 0;
+      element = element.offsetParent;
+    } while (element);
+
+    return { top: top, left: left, width: width, height: height };
+  };
+
+  /**
+   * Function that returns viewport dimensions in object.
+   * @function
+   * @return {object}
+   */
+
+
+  Sticky.prototype.getViewportSize = function getViewportSize() {
     return {
       width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
       height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
     };
-  },
+  };
 
-  getScrollTopPosition: function getScrollTopPosition() {
+  /**
+   * Function that returns scroll top position in pixels.
+   * @function
+   * @return {number}
+   */
+
+
+  Sticky.prototype.getScrollTopPosition = function getScrollTopPosition() {
     return (window.pageYOffset || document.scrollTop) - (document.clientTop || 0) || 0;
-  },
+  };
 
-  setPosition: function setPosition() {
-    var _this4 = this;
+  /**
+   * Helper function for loops.
+   * @helper
+   * @param {array}
+   * @param {function} callback - Callback function thaht will be invoked to every element from array.
+   */
 
-    this.iterate(this.elements, function (el) {
-      _this4.removeStyle(el, ['position', 'width', 'top', 'left']);
 
-      if (_this4.vp.height < el.sticky.rect.height || !el.sticky.active) {
-        return;
-      }
-
-      if (_this4.scrollTop > el.sticky.rect.top - el.sticky.marginTop) {
-        _this4.addStyle(el, {
-          position: 'fixed',
-          width: el.sticky.rect.width + 'px',
-          left: el.sticky.rect.left + 'px'
-        });
-
-        if (_this4.scrollTop + el.sticky.rect.height + el.sticky.marginTop > el.sticky.container.rect.top + el.sticky.container.rect.height) {
-
-          if (el.sticky.class) el.classList.remove(el.sticky.class);
-
-          _this4.addStyle(el, {
-            top: el.sticky.container.rect.top + el.sticky.container.rect.height - (_this4.scrollTop + el.sticky.rect.height) + 'px' });
-        } else {
-          if (el.sticky.class) el.classList.add(el.sticky.class);
-
-          _this4.addStyle(el, { top: el.sticky.marginTop + 'px' });
-        }
-      } else {
-        if (el.sticky.class) el.classList.remove(el.sticky.class);
-
-        _this4.removeStyle(el, ['position', 'width', 'top', 'left']);
-      }
-    });
-  },
-
-  updatePosition: function updatePosition() {
-    this.updateRect();
-    this.setPosition();
-  },
-
-  update: function update() {
-    var _this5 = this;
-
-    if (this.isSet) {
-      (function () {
-        var self = _this5;
-
-        var thisUpdate = function thisUpdate() {
-          self.update();
-        };
-
-        _this5.iterate(_this5.elements, function (element) {
-          if (typeof element.sticky !== 'undefined') {
-            _this5.updatePosition();
-          } else {
-            setTimeout(thisUpdate, 100);
-          }
-        });
-      })();
-    }
-  },
-
-  addStyle: function addStyle(el, styles) {
-    for (var property in styles) {
-      if (styles.hasOwnProperty(property)) {
-        el.style[property] = styles[property];
-      }
-    }
-  },
-
-  removeStyle: function removeStyle(el, properties) {
-    this.iterate(properties, function (property) {
-      return el.style[property] = null;
-    });
-  },
-
-  iterate: function iterate(array, callback) {
+  Sticky.prototype.forEach = function forEach(array, callback) {
     for (var i = 0, len = array.length; i < len; i++) {
       callback(array[i]);
     }
-  }
-};
+  };
 
-if ((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === 'object' && _typeof(module.exports) === 'object') {
-  module.exports = exports = Sticky;
-}
+  /**
+   * Helper function to easy add css properties to specified element.
+   * @helper
+   * @param {node} element - DOM element.
+   * @param {object} properties - CSS properties that will be added to the specified element.
+   */
+
+
+  Sticky.prototype.addStyle = function addStyle(element, properties) {
+    for (var property in properties) {
+      if (properties.hasOwnProperty(property)) {
+        element.style[property] = properties[property];
+      }
+    }
+  };
+
+  /**
+   * Helper function to easy remove css properties from specified element.
+   * @helper
+   * @param {node} element - DOM element.
+   * @param {object} properties - CSS properties that will be removed from the specified element.
+   */
+
+
+  Sticky.prototype.removeStyle = function removeStyle(element, properties) {
+    this.forEach(properties, function (property) {
+      element.style[property] = '';
+    });
+  };
+
+  return Sticky;
+}();
+
+/**
+ * Export function that supports AMD, CommonJS and Plain Browser.
+ */
+
+
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports !== 'undefined') {
+    module.exports = factory;
+  } else {
+    window.Sticky = factory;
+  }
+})(this, Sticky);
