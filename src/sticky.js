@@ -347,6 +347,6 @@ class Sticky {
   } else if (typeof exports !== 'undefined') {
     module.exports = factory;
   } else {
-    window.Sticky = factory;
+    root.Sticky = factory;
   }
 })(this, Sticky);
