@@ -9,7 +9,7 @@ Sticky-js is a library for sticky elements written in vanilla javascript. With t
 ## Features
 
 - Written in vanilla javascript, no dependencies needed
-- Lightweight (minified: ~3.96kb, gzipped: ~1.27kb)
+- Lightweight (minified: ~4.82kb, gzipped: ~1.46kb)
 - It can be sticky to the entire page or to selected parent container
 - No additional CSS needed
 
