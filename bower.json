@@ -1,5 +1,5 @@
 {
-  "name": "sticky-js",
+  "name": "sticky.js",
   "description": "Sticky elements",
   "main": "dist/sticky.compile.js",
   "authors": [
