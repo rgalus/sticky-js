@@ -342,10 +342,10 @@ class Sticky {
  * Export function that supports AMD, CommonJS and Plain Browser.
  */
 ((root, factory) => {
-  if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  } else if (typeof exports !== 'undefined') {
+  if (typeof exports !== 'undefined') {
     module.exports = factory;
+  } else if (typeof define === 'function' && define.amd) {
+    define([], factory);
   } else {
     root.Sticky = factory;
   }
