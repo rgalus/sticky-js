@@ -98,18 +98,18 @@ class Sticky {
       element.sticky.active = true;
     }
 
-    this.addStyle(element, {
-      '-webkit-transform': 'translate3d(0, 0, 0)',
-      '-ms-transform': 'translate3d(0, 0, 0)',
-      'transform': 'translate3d(0, 0, 0)',
+    // this.addStyle(element, {
+    //   '-webkit-transform': 'translate3d(0, 0, 0)',
+    //   '-ms-transform': 'translate3d(0, 0, 0)',
+    //   'transform': 'translate3d(0, 0, 0)',
 
-      '-webkit-perspective': 1000,
-      '-ms-perspective': 1000,
-      'perspective': 1000,
+    //   '-webkit-perspective': 1000,
+    //   '-ms-perspective': 1000,
+    //   'perspective': 1000,
 
-      '-webkit-backface-visibility': 'hidden',
-      'backface-visibility': 'hidden',
-    });
+    //   '-webkit-backface-visibility': 'hidden',
+    //   'backface-visibility': 'hidden',
+    // });
 
     this.elements.push(element);
 
