@@ -91,12 +91,31 @@ class Sticky {
    * @param {node} element - Sticky element to be activated.
    */
    activate(element) {
+    let heightBefore, heightAfter;
+
+    heightBefore = element.sticky.container.rect.height;
+
+    this.addStyle(element, { position: 'fixed' });
+
+    heightAfter = element.sticky.container.offsetHeight;
+
+    this.removeStyle(element, ['position']);
+
+
     if (
-      element.sticky.stickyFor < this.vp.width
+      (heightAfter >= heightBefore)
+      && (element.sticky.stickyFor < this.vp.width)
       && !element.sticky.active
     ) {
       element.sticky.active = true;
     }
+
+    // if (
+    //   element.sticky.stickyFor < this.vp.width
+    //   && !element.sticky.active
+    // ) {
+    //   element.sticky.active = true;
+    // }
 
     // this.addStyle(element, {
     //   '-webkit-transform': 'translate3d(0, 0, 0)',
