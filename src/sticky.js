@@ -41,11 +41,10 @@ class Sticky {
    * @function
    */
   run() {
-    // wait for DOM content to be fully loaded
-    const DOMContentLoaded = setInterval(() => {
-      if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        // now we are sure that dom content has been loaded
-        clearInterval(DOMContentLoaded);
+    // wait for page to be fully loaded
+    const pageLoaded = setInterval(() => {
+      if (document.readyState === 'complete') {
+        clearInterval(pageLoaded);
 
         const elements = document.querySelectorAll(this.selector);
         this.forEach(elements, (element) => this.renderElement(element));
