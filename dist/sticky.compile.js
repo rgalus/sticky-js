@@ -110,7 +110,7 @@ var Sticky = function () {
   Sticky.prototype.activate = function activate(element) {
     let heightBefore, heightAfter;
 
-    heightBefore = element.sticky.container.rect.height;
+    heightBefore = element.sticky.container.offsetHeight;
 
     this.addStyle(element, { position: 'fixed' });
 
@@ -217,12 +217,12 @@ var Sticky = function () {
         left: element.sticky.rect.left + 'px'
       });
 
-      if (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop > element.sticky.container.rect.top + element.sticky.container.rect.height) {
+      if (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop > element.sticky.container.rect.top + element.sticky.container.offsetHeight) {
 
         if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
 
         this.addStyle(element, {
-          top: element.sticky.container.rect.top + element.sticky.container.rect.height - (this.scrollTop + element.sticky.rect.height) + 'px' });
+          top: element.sticky.container.rect.top + element.sticky.container.offsetHeight - (this.scrollTop + element.sticky.rect.height) + 'px' });
       } else {
         if (element.sticky.stickyClass) element.classList.add(element.sticky.stickyClass);
 
