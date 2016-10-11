@@ -50,11 +50,10 @@ var Sticky = function () {
   Sticky.prototype.run = function run() {
     var _this = this;
 
-    // wait for DOM content to be fully loaded
-    var DOMContentLoaded = setInterval(function () {
-      if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        // now we are sure that dom content has been loaded
-        clearInterval(DOMContentLoaded);
+    // wait for page to be fully loaded
+    var pageLoaded = setInterval(function () {
+      if (document.readyState === 'complete') {
+        clearInterval(pageLoaded);
 
         var elements = document.querySelectorAll(_this.selector);
         _this.forEach(elements, function (element) {
