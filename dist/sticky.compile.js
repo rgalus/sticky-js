@@ -50,11 +50,10 @@ var Sticky = function () {
   Sticky.prototype.run = function run() {
     var _this = this;
 
-    // wait for DOM content to be fully loaded
-    var DOMContentLoaded = setInterval(function () {
-      if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        // now we are sure that dom content has been loaded
-        clearInterval(DOMContentLoaded);
+    // wait for page to be fully loaded
+    var pageLoaded = setInterval(function () {
+      if (document.readyState === 'complete') {
+        clearInterval(pageLoaded);
 
         var elements = document.querySelectorAll(_this.selector);
         _this.forEach(elements, function (element) {
@@ -108,7 +107,18 @@ var Sticky = function () {
 
 
   Sticky.prototype.activate = function activate(element) {
-    if (element.sticky.stickyFor < this.vp.width && !element.sticky.active) {
+    var heightBefore = void 0,
+        heightAfter = void 0;
+
+    heightBefore = element.sticky.container.offsetHeight;
+
+    this.addStyle(element, { position: 'fixed' });
+
+    heightAfter = element.sticky.container.offsetHeight;
+
+    this.removeStyle(element, ['position']);
+
+    if (heightAfter >= heightBefore && element.sticky.stickyFor < this.vp.width && !element.sticky.active) {
       element.sticky.active = true;
     }
 
@@ -198,12 +208,12 @@ var Sticky = function () {
         left: element.sticky.rect.left + 'px'
       });
 
-      if (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop > element.sticky.container.rect.top + element.sticky.container.rect.height) {
+      if (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop > element.sticky.container.rect.top + element.sticky.container.offsetHeight) {
 
         if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
 
         this.addStyle(element, {
-          top: element.sticky.container.rect.top + element.sticky.container.rect.height - (this.scrollTop + element.sticky.rect.height) + 'px' });
+          top: element.sticky.container.rect.top + element.sticky.container.offsetHeight - (this.scrollTop + element.sticky.rect.height) + 'px' });
       } else {
         if (element.sticky.stickyClass) element.classList.add(element.sticky.stickyClass);
 

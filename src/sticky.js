@@ -41,11 +41,10 @@ class Sticky {
    * @function
    */
   run() {
-    // wait for DOM content to be fully loaded
-    const DOMContentLoaded = setInterval(() => {
-      if (document.readyState === 'interactive' || document.readyState === 'complete') {
-        // now we are sure that dom content has been loaded
-        clearInterval(DOMContentLoaded);
+    // wait for page to be fully loaded
+    const pageLoaded = setInterval(() => {
+      if (document.readyState === 'complete') {
+        clearInterval(pageLoaded);
 
         const elements = document.querySelectorAll(this.selector);
         this.forEach(elements, (element) => this.renderElement(element));
@@ -91,8 +90,19 @@ class Sticky {
    * @param {node} element - Sticky element to be activated.
    */
    activate(element) {
+    let heightBefore, heightAfter;
+
+    heightBefore = element.sticky.container.offsetHeight;
+
+    this.addStyle(element, { position: 'fixed' });
+
+    heightAfter = element.sticky.container.offsetHeight;
+
+    this.removeStyle(element, ['position']);
+
     if (
-      element.sticky.stickyFor < this.vp.width
+      (heightAfter >= heightBefore)
+      && (element.sticky.stickyFor < this.vp.width)
       && !element.sticky.active
     ) {
       element.sticky.active = true;
@@ -191,13 +201,13 @@ class Sticky {
 
       if (
         (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop)
-        > (element.sticky.container.rect.top + element.sticky.container.rect.height)
+        > (element.sticky.container.rect.top + element.sticky.container.offsetHeight)
       ) {
 
         if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
 
         this.addStyle(element, {
-          top: (element.sticky.container.rect.top + element.sticky.container.rect.height) - (this.scrollTop + element.sticky.rect.height) + 'px' }
+          top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + 'px' }
         );
       } else {
         if (element.sticky.stickyClass) element.classList.add(element.sticky.stickyClass);
