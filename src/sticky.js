@@ -90,13 +90,11 @@ class Sticky {
    * @param {node} element - Sticky element to be activated.
    */
    activate(element) {
-    let heightBefore, heightAfter;
-
-    heightBefore = element.sticky.container.offsetHeight;
+    const heightBefore = element.sticky.container.offsetHeight;
 
     this.addStyle(element, { position: 'fixed' });
 
-    heightAfter = element.sticky.container.offsetHeight;
+    const heightAfter = element.sticky.container.offsetHeight;
 
     this.removeStyle(element, ['position']);
 
@@ -108,23 +106,19 @@ class Sticky {
       element.sticky.active = true;
     }
 
-    // this.addStyle(element, {
-    //   '-webkit-transform': 'translate3d(0, 0, 0)',
-    //   '-ms-transform': 'translate3d(0, 0, 0)',
-    //   'transform': 'translate3d(0, 0, 0)',
+    if (this.elements.indexOf(element) < 0) {
+      this.elements.push(element);
+    }
 
-    //   '-webkit-perspective': 1000,
-    //   '-ms-perspective': 1000,
-    //   'perspective': 1000,
+    if (!element.sticky.resizeEvent) {
+      this.initResizeEvents(element);
+      element.sticky.resizeEvent = true;
+    }
 
-    //   '-webkit-backface-visibility': 'hidden',
-    //   'backface-visibility': 'hidden',
-    // });
-
-    this.elements.push(element);
-
-    this.initResizeEvents(element);
-    this.initScrollEvents(element);
+    if (!element.sticky.scrollEvent) {
+      this.initScrollEvents(element);
+      element.sticky.scrollEvent = true;
+    }
    }
 
 
@@ -231,6 +225,7 @@ class Sticky {
       element.sticky.rect = this.getRectangle(element);
       element.sticky.container.rect = this.getRectangle(element.sticky.container);
 
+      this.activate(element);
       this.setPosition(element);
     });
    }
