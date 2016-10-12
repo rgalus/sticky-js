@@ -13,10 +13,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Sticky = function () {
   /**
-   * Sticky instance constructor.
+   * Sticky instance constructor
    * @constructor
-   * @param {string} selector - Selector which we can find elements.
-   * @param {string} options - Global options for sticky elements (could be overwritten by data-{option}="" attributes).
+   * @param {string} selector - Selector which we can find elements
+   * @param {string} options - Global options for sticky elements (could be overwritten by data-{option}="" attributes)
    */
   function Sticky() {
     var selector = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -42,7 +42,7 @@ var Sticky = function () {
   }
 
   /**
-   * Activate Sticky library
+   * Function that waits for page to be fully loaded and then renders & activates every sticky element found with specified selector
    * @function
    */
 
@@ -64,16 +64,16 @@ var Sticky = function () {
   };
 
   /**
-   * Renders sticky element
+   * Function that assign needed variables for sticky element, that are used in future for calculations and other
    * @function
-   * @param {node} element - Sticky element to be rendered.
+   * @param {node} element - Element to be rendered
    */
 
 
   Sticky.prototype.renderElement = function renderElement(element) {
     var _this2 = this;
 
-    // create container where are needed variables are placed
+    // create container for variables needed in future
     element.sticky = {};
 
     // set default variables
@@ -88,7 +88,7 @@ var Sticky = function () {
 
     element.sticky.rect = this.getRectangle(element);
 
-    // fix when el is image that has not yet loaded and width, height = 0
+    // fix when element is image that has not yet loaded and width, height = 0
     if (element.tagName.toLowerCase === 'img') {
       element.onload = function () {
         return element.sticky.rect = _this2.getRectangle(element);
@@ -100,46 +100,46 @@ var Sticky = function () {
   };
 
   /**
-   * Activate element if breakpoint
+   * Function that activates element when specified conditions are met and then initalise events
    * @function
-   * @param {node} element - Sticky element to be activated.
+   * @param {node} element - Element to be activated
    */
 
 
   Sticky.prototype.activate = function activate(element) {
-    var heightBefore = void 0,
-        heightAfter = void 0;
+    var heightBefore = element.sticky.container.offsetHeight;
 
-    heightBefore = element.sticky.container.offsetHeight;
+    this.css(element, { position: 'fixed' });
 
-    this.addStyle(element, { position: 'fixed' });
+    var heightAfter = element.sticky.container.offsetHeight;
 
-    heightAfter = element.sticky.container.offsetHeight;
-
-    this.removeStyle(element, ['position']);
+    this.css(element, { position: '' });
 
     if (heightAfter >= heightBefore && element.sticky.stickyFor < this.vp.width && !element.sticky.active) {
       element.sticky.active = true;
     }
 
-    // this.addStyle(element, {
-    //   '-webkit-transform': 'translate3d(0, 0, 0)',
-    //   '-ms-transform': 'translate3d(0, 0, 0)',
-    //   'transform': 'translate3d(0, 0, 0)',
+    if (this.elements.indexOf(element) < 0) {
+      this.elements.push(element);
+    }
 
-    //   '-webkit-perspective': 1000,
-    //   '-ms-perspective': 1000,
-    //   'perspective': 1000,
+    if (!element.sticky.resizeEvent) {
+      this.initResizeEvents(element);
+      element.sticky.resizeEvent = true;
+    }
 
-    //   '-webkit-backface-visibility': 'hidden',
-    //   'backface-visibility': 'hidden',
-    // });
-
-    this.elements.push(element);
-
-    this.initResizeEvents(element);
-    this.initScrollEvents(element);
+    if (!element.sticky.scrollEvent) {
+      this.initScrollEvents(element);
+      element.sticky.scrollEvent = true;
+    }
   };
+
+  /**
+   * Function which is adding onResizeEvents to window listener and assigns function to element as resizeListener
+   * @function
+   * @param {node} element - Element for which resize events are initialised
+   */
+
 
   Sticky.prototype.initResizeEvents = function initResizeEvents(element) {
     var _this3 = this;
@@ -149,6 +149,13 @@ var Sticky = function () {
     };
     window.addEventListener('resize', element.sticky.resizeListener);
   };
+
+  /**
+   * Function which is fired when user resize window. It checks if element should be activated or deactivated and then run setPosition function
+   * @function
+   * @param {node} element - Element for which event function is fired
+   */
+
 
   Sticky.prototype.onResizeEvents = function onResizeEvents(element) {
     this.vp = this.getViewportSize();
@@ -165,6 +172,13 @@ var Sticky = function () {
     this.setPosition(element);
   };
 
+  /**
+   * Function which is adding onScrollEvents to window listener and assigns function to element as scrollListener
+   * @function
+   * @param {node} element - Element for which scroll events are initialised
+   */
+
+
   Sticky.prototype.initScrollEvents = function initScrollEvents(element) {
     var _this4 = this;
 
@@ -173,6 +187,13 @@ var Sticky = function () {
     };
     window.addEventListener('scroll', element.sticky.scrollListener);
   };
+
+  /**
+   * Function which is fired when user scroll window. If element is active, function is invoking setPosition function
+   * @function
+   * @param {node} element - Element for which event function is fired
+   */
+
 
   Sticky.prototype.onScrollEvents = function onScrollEvents(element) {
     this.scrollTop = this.getScrollTopPosition();
@@ -183,15 +204,14 @@ var Sticky = function () {
   };
 
   /**
-   * Function
+   * Main function for the library. Here are some condition calculations and css appending for sticky element when user scroll window
    * @function
-   * @param {node} element - Element which sticky container are looked for.
-   * @return {node} element - Sticky container
+   * @param {node} element - Element that will be positioned if it's active
    */
 
 
   Sticky.prototype.setPosition = function setPosition(element) {
-    this.removeStyle(element, ['position', 'width', 'top', 'left']);
+    this.css(element, { position: '', width: '', top: '', left: '' });
 
     if (this.vp.height < element.sticky.rect.height || !element.sticky.active) {
       return;
@@ -202,7 +222,7 @@ var Sticky = function () {
     }
 
     if (this.scrollTop > element.sticky.rect.top - element.sticky.marginTop) {
-      this.addStyle(element, {
+      this.css(element, {
         position: 'fixed',
         width: element.sticky.rect.width + 'px',
         left: element.sticky.rect.left + 'px'
@@ -212,22 +232,22 @@ var Sticky = function () {
 
         if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
 
-        this.addStyle(element, {
+        this.css(element, {
           top: element.sticky.container.rect.top + element.sticky.container.offsetHeight - (this.scrollTop + element.sticky.rect.height) + 'px' });
       } else {
         if (element.sticky.stickyClass) element.classList.add(element.sticky.stickyClass);
 
-        this.addStyle(element, { top: element.sticky.marginTop + 'px' });
+        this.css(element, { top: element.sticky.marginTop + 'px' });
       }
     } else {
       if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
 
-      this.removeStyle(element, ['position', 'width', 'top', 'left']);
+      this.css(element, { position: '', width: '', top: '', left: '' });
     }
   };
 
   /**
-   * Function that updates element sticky rectangle (with parent container) and then update position;
+   * Function that updates element sticky rectangle (with sticky container), then activate or deactivate element, then update position if it's active
    * @function
    */
 
@@ -239,14 +259,15 @@ var Sticky = function () {
       element.sticky.rect = _this5.getRectangle(element);
       element.sticky.container.rect = _this5.getRectangle(element.sticky.container);
 
+      _this5.activate(element);
       _this5.setPosition(element);
     });
   };
 
   /**
-   * Function that returns element in which sticky is stuck (if is not specified, then it is sticky document body);
+   * Function that returns container element in which sticky element is stuck (if is not specified, then it's stuck to body)
    * @function
-   * @param {node} element - Element which sticky container are looked for.
+   * @param {node} element - Element which sticky container are looked for
    * @return {node} element - Sticky container
    */
 
@@ -262,23 +283,21 @@ var Sticky = function () {
   };
 
   /**
-   * Function that returns element rectangle & position (width, height, top, left).
+   * Function that returns element rectangle & position (width, height, top, left)
    * @function
-   * @param {node} element - Element which position & rectangle are calculated.
+   * @param {node} element - Element which position & rectangle are returned
    * @return {object}
    */
 
 
   Sticky.prototype.getRectangle = function getRectangle(element) {
-    this.removeStyle(element, ['position', 'width', 'top', 'left']);
+    this.css(element, { position: '', width: '', top: '', left: '' });
+
+    var width = Math.max(element.offsetWidth, element.clientWidth, element.scrollWidth);
+    var height = Math.max(element.offsetHeight, element.clientHeight, element.scrollHeight);
 
     var top = 0;
     var left = 0;
-    var width = 0;
-    var height = 0;
-
-    width = element.offsetWidth;
-    height = element.offsetHeight;
 
     do {
       top += element.offsetTop || 0;
@@ -290,7 +309,7 @@ var Sticky = function () {
   };
 
   /**
-   * Function that returns viewport dimensions in object.
+   * Function that returns viewport dimensions
    * @function
    * @return {object}
    */
@@ -304,7 +323,7 @@ var Sticky = function () {
   };
 
   /**
-   * Function that returns scroll top position in pixels.
+   * Function that returns scroll position offset from top
    * @function
    * @return {number}
    */
@@ -315,10 +334,10 @@ var Sticky = function () {
   };
 
   /**
-   * Helper function for loops.
+   * Helper function for loops
    * @helper
    * @param {array}
-   * @param {function} callback - Callback function thaht will be invoked to every element from array.
+   * @param {function} callback - Callback function (no need for explanation)
    */
 
 
@@ -329,33 +348,19 @@ var Sticky = function () {
   };
 
   /**
-   * Helper function to easy add css properties to specified element.
+   * Helper function to add/remove css properties for specified element.
    * @helper
-   * @param {node} element - DOM element.
-   * @param {object} properties - CSS properties that will be added to the specified element.
+   * @param {node} element - DOM element
+   * @param {object} properties - CSS properties that will be added/removed from specified element
    */
 
 
-  Sticky.prototype.addStyle = function addStyle(element, properties) {
+  Sticky.prototype.css = function css(element, properties) {
     for (var property in properties) {
       if (properties.hasOwnProperty(property)) {
         element.style[property] = properties[property];
       }
     }
-  };
-
-  /**
-   * Helper function to easy remove css properties from specified element.
-   * @helper
-   * @param {node} element - DOM element.
-   * @param {object} properties - CSS properties that will be removed from the specified element.
-   */
-
-
-  Sticky.prototype.removeStyle = function removeStyle(element, properties) {
-    this.forEach(properties, function (property) {
-      element.style[property] = '';
-    });
   };
 
   return Sticky;
