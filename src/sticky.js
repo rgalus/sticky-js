@@ -90,16 +90,8 @@ class Sticky {
    * @param {node} element - Element to be activated
    */
    activate(element) {
-    const heightBefore = element.sticky.container.offsetHeight;
-
-    this.css(element, { position: 'fixed' });
-
-    const heightAfter = element.sticky.container.offsetHeight;
-
-    this.css(element, { position: '' });
-
     if (
-      (heightAfter >= heightBefore)
+      ((element.sticky.rect.top + element.sticky.rect.height) < (element.sticky.container.rect.top + element.sticky.container.rect.height))
       && (element.sticky.stickyFor < this.vp.width)
       && !element.sticky.active
     ) {
@@ -119,6 +111,8 @@ class Sticky {
       this.initScrollEvents(element);
       element.sticky.scrollEvent = true;
     }
+
+    this.setPosition(element);
    }
 
 
@@ -145,12 +139,14 @@ class Sticky {
     element.sticky.container.rect = this.getRectangle(element.sticky.container);
 
     if (
-      element.sticky.stickyFor < this.vp.width
+      ((element.sticky.rect.top + element.sticky.rect.height) < (element.sticky.container.rect.top + element.sticky.container.rect.height))
+      && (element.sticky.stickyFor < this.vp.width)
       && !element.sticky.active
     ) {
       element.sticky.active = true;
     } else if (
-      element.sticky.stickyFor >= this.vp.width
+      ((element.sticky.rect.top + element.sticky.rect.height) >= (element.sticky.container.rect.top + element.sticky.container.rect.height))
+      || element.sticky.stickyFor >= this.vp.width
       && element.sticky.active
     ) {
       element.sticky.active = false;
@@ -201,7 +197,18 @@ class Sticky {
       element.sticky.rect = this.getRectangle(element);
     }
 
-    if (this.scrollTop > (element.sticky.rect.top - element.sticky.marginTop)) {
+
+    if (
+      element.sticky.rect.top === 0
+      && element.sticky.container === document.querySelector('body')
+    ) {
+      this.css(element, {
+        position: 'fixed',
+        top: element.sticky.rect.top + 'px',
+        left: element.sticky.rect.left + 'px',
+        width: element.sticky.rect.width + 'px',
+      });
+    } else if (this.scrollTop > (element.sticky.rect.top - element.sticky.marginTop)) {
       this.css(element, {
         position: 'fixed',
         width: element.sticky.rect.width + 'px',
