@@ -35,7 +35,8 @@ var Sticky = function () {
     this.options = {
       marginTop: options.marginTop || 0,
       stickyFor: options.stickFor || 0,
-      stickyClass: options.stickyClass || null
+      stickyClass: options.stickyClass || null,
+      stickyContainer: options.stickContainer || 'body'
     };
 
     this.run();
@@ -276,7 +277,7 @@ var Sticky = function () {
   Sticky.prototype.getStickyContainer = function getStickyContainer(element) {
     var container = element;
 
-    while (!container.hasAttribute('data-sticky-container') && container !== document.querySelector('body')) {
+    while (!container.hasAttribute('data-sticky-container') && !container.parentNode.querySelector(this.options.stickyContainer) && container !== document.querySelector('body')) {
       container = container.parentNode;
     }
 
