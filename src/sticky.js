@@ -30,6 +30,7 @@ class Sticky {
       marginTop: options.marginTop || 0,
       stickyFor: options.stickFor || 0,
       stickyClass: options.stickyClass || null,
+      stickyContainer: options.stickContainer || 'body'
     };
 
     this.run();
@@ -264,6 +265,7 @@ class Sticky {
 
     while (
       !container.hasAttribute('data-sticky-container')
+      && !container.parentNode.querySelector(this.options.stickyContainer)
       && container !== document.querySelector('body')
     ) {
       container = container.parentNode;
