@@ -30,7 +30,7 @@ class Sticky {
       marginTop: options.marginTop || 0,
       stickyFor: options.stickFor || 0,
       stickyClass: options.stickyClass || null,
-      stickyContainer: options.stickContainer || 'body'
+      stickyContainer: options.stickContainer || 'body',
     };
 
     this.run();
