@@ -3,7 +3,7 @@
  * Sticky.js
  * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
  *
- * @version 1.1.5
+ * @version 1.1.6
  * @author Rafal Galus <biuro@rafalgalus.pl>
  * @website https://rgalus.github.io/sticky-js/
  * @repo https://github.com/rgalus/sticky-js
@@ -21,15 +21,17 @@ class Sticky {
     this.selector = selector;
     this.elements = [];
 
-    this.version = '1.1.5';
+    this.version = '1.1.6';
 
     this.vp = this.getViewportSize();
     this.scrollTop = this.getScrollTopPosition();
+    this.body = document.querySelector('body');
 
     this.options = {
       marginTop: options.marginTop || 0,
       stickyFor: options.stickFor || 0,
       stickyClass: options.stickyClass || null,
+      stickyContainer: options.stickyContainer || 'body',
     };
 
     this.run();
@@ -68,6 +70,9 @@ class Sticky {
     element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
+    // @todo attribute for stickyContainer
+    // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
+    element.sticky.stickyContainer = this.options.stickyContainer;
 
     element.sticky.container = this.getStickyContainer(element);
     element.sticky.container.rect = this.getRectangle(element.sticky.container);
@@ -200,7 +205,7 @@ class Sticky {
 
     if (
       element.sticky.rect.top === 0
-      && element.sticky.container === document.querySelector('body')
+      && element.sticky.container === this.body
     ) {
       this.css(element, {
         position: 'fixed',
@@ -260,11 +265,12 @@ class Sticky {
    * @return {node} element - Sticky container
    */
    getStickyContainer(element) {
-    let container = element;
+    let container = element.parentNode;
 
     while (
       !container.hasAttribute('data-sticky-container')
-      && container !== document.querySelector('body')
+      && !container.parentNode.querySelector(element.sticky.stickyContainer)
+      && container !== this.body
     ) {
       container = container.parentNode;
     }
