@@ -31,6 +31,7 @@ class Sticky {
       marginTop: options.marginTop || 0,
       stickyFor: options.stickFor || 0,
       stickyClass: options.stickyClass || null,
+      stickyWait: options.stickyWait || null,
       stickyContainer: options.stickyContainer || 'body',
     };
 
@@ -69,6 +70,7 @@ class Sticky {
 
     element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
+    element.sticky.stickyWait = parseInt(element.getAttribute('data-sticky-wait')) || this.options.stickyWait;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
@@ -180,6 +182,8 @@ class Sticky {
    onScrollEvents(element) {
     this.scrollTop = this.getScrollTopPosition();
 
+    this.wait(element);
+
     if (element.sticky.active) {
       this.setPosition(element);
     }
@@ -231,12 +235,16 @@ class Sticky {
           top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + 'px' }
         );
       } else {
-        if (element.sticky.stickyClass) element.classList.add(element.sticky.stickyClass);
-
+        if (element.sticky.stickyClass) {
+          element.classList.add(element.sticky.stickyClass);
+        }
+        
         this.css(element, { top: element.sticky.marginTop + 'px' });
       }
     } else {
-      if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
+      if (element.sticky.stickyClass){
+        element.classList.remove(element.sticky.stickyClass);
+      }
 
       this.css(element, { position: '', width: '', top: '', left: '' });
     }
@@ -350,6 +358,27 @@ class Sticky {
     for (let property in properties) {
       if (properties.hasOwnProperty(property)) {
         element.style[property] = properties[property];
+      }
+    }
+  }
+
+  /**
+   * Helper function to make element sticky for stickyWait milliseconds
+   * @helper
+   * @param {node} element - Element which position & rectangle are returned
+   */
+  wait(element) {
+    if(element.sticky.stickyWait) {
+        if (this.scrollTop > (element.sticky.rect.top - element.sticky.marginTop)) {
+            if(element.sticky.active) {
+              var that = this;
+              setTimeout(function () { 
+                that.css(element, { position: '', width: '', top: '', left: '' }); 
+                element.sticky.active = false;
+              }, element.sticky.stickyWait);
+            }
+        } else if (!element.sticky.active){
+        this.activate(element);
       }
     }
   }

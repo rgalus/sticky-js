@@ -65,8 +65,13 @@
       .container {
         margin-top: 200px;
         background: #ecf0f1;
-
         height: 500px;
+      }
+
+      .tall-container {
+        margin-top: 200px;
+        background: #ecf0f1;
+        height: 1200px;
       }
 
     </style>
@@ -87,6 +92,13 @@
     </header>
 
     <main>
+
+      <section class="tall-container" data-sticky-container>
+        <div class="row column">
+          <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky  data-sticky-wait = "3000" data-margin-top="100">
+          <img src="http://placehold.it/250x250" class="float-right" alt="Sticky" data-sticky data-sticky-wait = "3000" data-margin-top="100">
+        </div>
+      </section>
 
       <section class="container" data-sticky-container>
         <div class="row column">
