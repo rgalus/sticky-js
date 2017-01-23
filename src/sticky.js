@@ -29,7 +29,7 @@ class Sticky {
 
     this.options = {
       marginTop: options.marginTop || 0,
-      stickyFor: options.stickFor || 0,
+      stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
     };
