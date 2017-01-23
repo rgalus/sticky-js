@@ -29,7 +29,7 @@ class Sticky {
 
     this.options = {
       marginTop: options.marginTop || 0,
-      stickyFor: options.stickFor || 0,
+      stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
     };
@@ -80,7 +80,7 @@ class Sticky {
     element.sticky.rect = this.getRectangle(element);
 
     // fix when element is image that has not yet loaded and width, height = 0
-    if (element.tagName.toLowerCase === 'img') {
+    if (element.tagName.toLowerCase() === 'img') {
       element.onload = () => element.sticky.rect = this.getRectangle(element);
     }
 
