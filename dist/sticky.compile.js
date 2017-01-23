@@ -4,7 +4,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Sticky.js
  * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
  *
- * @version 1.1.6
+ * @version 1.1.7
  * @author Rafal Galus <biuro@rafalgalus.pl>
  * @website https://rgalus.github.io/sticky-js/
  * @repo https://github.com/rgalus/sticky-js
@@ -27,7 +27,7 @@ var Sticky = function () {
     this.selector = selector;
     this.elements = [];
 
-    this.version = '1.1.6';
+    this.version = '1.1.7';
 
     this.vp = this.getViewportSize();
     this.scrollTop = this.getScrollTopPosition();
@@ -35,7 +35,7 @@ var Sticky = function () {
 
     this.options = {
       marginTop: options.marginTop || 0,
-      stickyFor: options.stickFor || 0,
+      stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body'
     };
@@ -94,7 +94,7 @@ var Sticky = function () {
     element.sticky.rect = this.getRectangle(element);
 
     // fix when element is image that has not yet loaded and width, height = 0
-    if (element.tagName.toLowerCase === 'img') {
+    if (element.tagName.toLowerCase() === 'img') {
       element.onload = function () {
         return element.sticky.rect = _this2.getRectangle(element);
       };
