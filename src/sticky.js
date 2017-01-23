@@ -80,7 +80,7 @@ class Sticky {
     element.sticky.rect = this.getRectangle(element);
 
     // fix when element is image that has not yet loaded and width, height = 0
-    if (element.tagName.toLowerCase === 'img') {
+    if (element.tagName.toLowerCase() === 'img') {
       element.onload = () => element.sticky.rect = this.getRectangle(element);
     }
 
