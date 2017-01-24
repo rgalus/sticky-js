@@ -97,6 +97,8 @@ Option | Type | Default | Description
 data-margin-top | number | 0 | Margin between page and sticky element when scrolled
 data-sticky-for | number | 0 | Breakpoint which when is bigger than viewport width, sticky is activated and when is smaller, then sticky is destroyed
 data-sticky-class | string | null | Class added to sticky element when it is stuck
+data-sticky-wait | number | null | Millisecond of sticky element to wait and then un-sticks
+data-sticky-wait-multiple | Attribute | null | Add this attribute with data-sticky-wait to make the element sticky again when it returns back to viewport
 
 ### Development
 

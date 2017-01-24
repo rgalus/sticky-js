@@ -32,6 +32,7 @@ class Sticky {
       stickyFor: options.stickFor || 0,
       stickyClass: options.stickyClass || null,
       stickyWait: options.stickyWait || null,
+      stickyWaitMultiple: options.stickyWaitMultiple || null,
       stickyContainer: options.stickyContainer || 'body',
     };
 
@@ -71,6 +72,7 @@ class Sticky {
     element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyWait = parseInt(element.getAttribute('data-sticky-wait')) || this.options.stickyWait;
+    element.sticky.stickyWaitMultiple = element.hasAttribute('data-sticky-wait-multiple') || this.options.stickyWaitMultiple;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
@@ -377,7 +379,7 @@ class Sticky {
                 element.sticky.active = false;
               }, element.sticky.stickyWait);
             }
-        } else if (!element.sticky.active){
+        } else if (!element.sticky.active && element.sticky.stickyWaitMultiple){
         this.activate(element);
       }
     }
