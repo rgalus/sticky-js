@@ -28,6 +28,7 @@ class Sticky {
     this.body = document.querySelector('body');
 
     this.options = {
+      wrap: options.wrap || false,
       marginTop: options.marginTop || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
@@ -70,6 +71,7 @@ class Sticky {
     element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
+    element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
     element.sticky.stickyContainer = this.options.stickyContainer;
@@ -84,8 +86,23 @@ class Sticky {
       element.onload = () => element.sticky.rect = this.getRectangle(element);
     }
 
+    if (element.sticky.wrap) {
+      this.wrapElement(element);
+    }
+
     // activate rendered element
     this.activate(element);
+  }
+
+
+  /**
+   * Function that activates wraps element into placeholder element
+   * @function
+   * @param {node} element - Element to be wrapped
+   */
+  wrapElement(element) {
+    element.insertAdjacentHTML('beforebegin', '<span></span>');
+    element.previousSibling.appendChild(element);
   }
 
 
@@ -202,6 +219,13 @@ class Sticky {
       element.sticky.rect = this.getRectangle(element);
     }
 
+    if (element.sticky.wrap) {
+      this.css(element.parentNode, {
+        display: 'block',
+        width: element.sticky.rect.width + 'px',
+        height: element.sticky.rect.height + 'px',
+      });
+    }
 
     if (
       element.sticky.rect.top === 0
@@ -225,20 +249,30 @@ class Sticky {
         > (element.sticky.container.rect.top + element.sticky.container.offsetHeight)
       ) {
 
-        if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
+        if (element.sticky.stickyClass) {
+          element.classList.remove(element.sticky.stickyClass);
+        }
 
         this.css(element, {
           top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + 'px' }
         );
       } else {
-        if (element.sticky.stickyClass) element.classList.add(element.sticky.stickyClass);
+        if (element.sticky.stickyClass) {
+          element.classList.add(element.sticky.stickyClass);
+        }
 
         this.css(element, { top: element.sticky.marginTop + 'px' });
       }
     } else {
-      if (element.sticky.stickyClass) element.classList.remove(element.sticky.stickyClass);
+      if (element.sticky.stickyClass) {
+        element.classList.remove(element.sticky.stickyClass);
+      }
 
       this.css(element, { position: '', width: '', top: '', left: '' });
+
+      if (element.sticky.wrap) {
+        this.css(element.parentNode, { display: '', width: '', height: '' });
+      }
     }
    }
 
