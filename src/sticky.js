@@ -96,7 +96,7 @@ class Sticky {
 
 
   /**
-   * Function that activates wraps element into placeholder element
+   * Wraps element into placeholder element
    * @function
    * @param {node} element - Element to be wrapped
    */
