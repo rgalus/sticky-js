@@ -30,6 +30,7 @@
       }
 
       img {
+        display: block;
         z-index: 2;
       }
 
@@ -66,7 +67,7 @@
         margin-top: 200px;
         background: #ecf0f1;
 
-        height: 500px;
+        min-height: 500px;
       }
 
     </style>
@@ -91,7 +92,10 @@
       <section class="container" data-sticky-container>
         <div class="row column">
           <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-sticky-for="1023" data-sticky-class="is-sticky" data-margin-top="100">
-          <img src="http://placehold.it/250x250" class="float-right" alt="Sticky" data-sticky data-margin-top="100">
+          <div class="float-right">
+            <img src="http://placehold.it/250x250" alt="Sticky" data-sticky data-sticky-wrap data-margin-top="100">
+            <img src="http://placehold.it/250x125/ecf0f1?text=Not+sticky" alt="Not sticky">
+          </div>
         </div>
       </section>
 
