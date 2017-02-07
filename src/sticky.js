@@ -150,6 +150,16 @@ class Sticky {
 
 
   /**
+   * Removes element listener from resize event
+   * @function
+   * @param {node} element - Element from which listener is deleted
+   */
+   destroyResizeEvents(element) {
+    window.removeEventListener('resize', element.sticky.resizeListener);
+   }
+
+
+  /**
    * Function which is fired when user resize window. It checks if element should be activated or deactivated and then run setPosition function
    * @function
    * @param {node} element - Element for which event function is fired
@@ -186,6 +196,16 @@ class Sticky {
    initScrollEvents(element) {
     element.sticky.scrollListener = () => this.onScrollEvents(element);
     window.addEventListener('scroll', element.sticky.scrollListener);
+   }
+
+
+  /**
+   * Removes element listener from scroll event
+   * @function
+   * @param {node} element - Element from which listener is deleted
+   */
+   destroyScrollEvents(element) {
+    window.removeEventListener('scroll', element.sticky.scrollListener);
    }
 
 
@@ -288,6 +308,19 @@ class Sticky {
 
       this.activate(element);
       this.setPosition(element);
+    });
+   }
+
+
+  /**
+   * Destroys sticky element, remove listeners
+   * @function
+   */
+   destroy() {
+    this.forEach(this.elements, (element) => {
+      this.destroyResizeEvents(element);
+      this.destroyScrollEvents(element);
+      delete element.sticky;
     });
    }
 
