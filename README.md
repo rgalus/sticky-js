@@ -9,7 +9,7 @@
 ## Features
 
 - Written in vanilla javascript, no dependencies needed
-- Lightweight (minified: ~5.72kb, gzipped: ~1.63kb)
+- Lightweight (minified: ~6.08kb, gzipped: ~1.67kb)
 - It can be sticky to the entire page or to selected parent container
 - No additional CSS needed
 
@@ -89,6 +89,14 @@ var sticky = new Sticky('.sticky');
 
 // and when parent change height..
 sticky.update();
+```
+
+Destroy sticky element
+
+```js
+var sticky = new Sticky('.sticky');
+
+sticky.destroy();
 ```
 
 ## Available options
