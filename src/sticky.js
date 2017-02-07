@@ -3,7 +3,7 @@
  * Sticky.js
  * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
  *
- * @version 1.1.8
+ * @version 1.1.9
  * @author Rafal Galus <biuro@rafalgalus.pl>
  * @website https://rgalus.github.io/sticky-js/
  * @repo https://github.com/rgalus/sticky-js
@@ -21,7 +21,7 @@ class Sticky {
     this.selector = selector;
     this.elements = [];
 
-    this.version = '1.1.8';
+    this.version = '1.1.9';
 
     this.vp = this.getViewportSize();
     this.scrollTop = this.getScrollTopPosition();

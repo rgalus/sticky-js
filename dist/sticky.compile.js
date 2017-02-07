@@ -4,7 +4,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Sticky.js
  * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
  *
- * @version 1.1.8
+ * @version 1.1.9
  * @author Rafal Galus <biuro@rafalgalus.pl>
  * @website https://rgalus.github.io/sticky-js/
  * @repo https://github.com/rgalus/sticky-js
@@ -27,7 +27,7 @@ var Sticky = function () {
     this.selector = selector;
     this.elements = [];
 
-    this.version = '1.1.8';
+    this.version = '1.1.9';
 
     this.vp = this.getViewportSize();
     this.scrollTop = this.getScrollTopPosition();
@@ -168,6 +168,17 @@ var Sticky = function () {
   };
 
   /**
+   * Removes element listener from resize event
+   * @function
+   * @param {node} element - Element from which listener is deleted
+   */
+
+
+  Sticky.prototype.destroyResizeEvents = function destroyResizeEvents(element) {
+    window.removeEventListener('resize', element.sticky.resizeListener);
+  };
+
+  /**
    * Function which is fired when user resize window. It checks if element should be activated or deactivated and then run setPosition function
    * @function
    * @param {node} element - Element for which event function is fired
@@ -203,6 +214,17 @@ var Sticky = function () {
       return _this4.onScrollEvents(element);
     };
     window.addEventListener('scroll', element.sticky.scrollListener);
+  };
+
+  /**
+   * Removes element listener from scroll event
+   * @function
+   * @param {node} element - Element from which listener is deleted
+   */
+
+
+  Sticky.prototype.destroyScrollEvents = function destroyScrollEvents(element) {
+    window.removeEventListener('scroll', element.sticky.scrollListener);
   };
 
   /**
@@ -303,6 +325,22 @@ var Sticky = function () {
 
       _this5.activate(element);
       _this5.setPosition(element);
+    });
+  };
+
+  /**
+   * Destroys sticky element, remove listeners
+   * @function
+   */
+
+
+  Sticky.prototype.destroy = function destroy() {
+    var _this6 = this;
+
+    this.forEach(this.elements, function (element) {
+      _this6.destroyResizeEvents(element);
+      _this6.destroyScrollEvents(element);
+      delete element.sticky;
     });
   };
 
