@@ -30,7 +30,8 @@ class Sticky {
     this.options = {
       wrap: options.wrap || false,
       marginTop: options.marginTop || 0,
-      stickyFor: options.stickyFor || 0,
+      stickyForMin: options.stickyForMin || 0,
+      stickyForMax: options.stickyForMax || Infinity,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
     };
@@ -69,7 +70,8 @@ class Sticky {
     element.sticky.active = false;
 
     element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
-    element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
+    element.sticky.stickyForMin = parseInt(element.getAttribute('data-sticky-for-min')) || parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyForMin;
+    element.sticky.stickyForMax = parseInt(element.getAttribute('data-sticky-for-max')) || this.options.stickyForMax;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
     // @todo attribute for stickyContainer
@@ -114,7 +116,8 @@ class Sticky {
    activate(element) {
     if (
       ((element.sticky.rect.top + element.sticky.rect.height) < (element.sticky.container.rect.top + element.sticky.container.rect.height))
-      && (element.sticky.stickyFor < this.vp.width)
+      && (element.sticky.stickyForMin < this.vp.width)
+      && (element.sticky.stickyForMax > this.vp.width)
       && !element.sticky.active
     ) {
       element.sticky.active = true;
@@ -172,13 +175,15 @@ class Sticky {
 
     if (
       ((element.sticky.rect.top + element.sticky.rect.height) < (element.sticky.container.rect.top + element.sticky.container.rect.height))
-      && (element.sticky.stickyFor < this.vp.width)
+      && (element.sticky.stickyForMin < this.vp.width)
+      && (element.sticky.stickyForMax > this.vp.width)
       && !element.sticky.active
     ) {
       element.sticky.active = true;
     } else if (
       ((element.sticky.rect.top + element.sticky.rect.height) >= (element.sticky.container.rect.top + element.sticky.container.rect.height))
-      || element.sticky.stickyFor >= this.vp.width
+      || element.sticky.stickyForMin >= this.vp.width
+      || element.sticky.stickyForMax <= this.vp.width
       && element.sticky.active
     ) {
       element.sticky.active = false;
