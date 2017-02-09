@@ -67,7 +67,12 @@
         margin-top: 200px;
         background: #ecf0f1;
 
-        min-height: 500px;
+        min-height: 800px;
+      }
+
+      h4.caption {
+        font-size: 22px;
+        padding-top: 10px; 
       }
 
     </style>
@@ -90,19 +95,30 @@
     <main>
 
       <section class="container" data-sticky-container>
-        <div class="row column">
-          <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-sticky-for="1023" data-sticky-class="is-sticky" data-margin-top="100">
-          <div class="float-right">
-            <img src="http://placehold.it/250x250" alt="Sticky" data-sticky data-sticky-wrap data-margin-top="100">
-            <img src="http://placehold.it/250x125/ecf0f1?text=Not+sticky" alt="Not sticky">
+        <div class="row">
+          <div class="column small-12 medium-4 large-3">
+            <img src="http://placehold.it/300/086F5B"  alt="Sticky" data-sticky data-sticky-wrap data-sticky-class="is-sticky" data-margin-top="100">
+            <h4 class="caption text-center">Always Sticky</h4>
+          </div>
+          <div class="column small-12 medium-4 large-3">
+            <img src="http://placehold.it/300/3DFFD9"  alt="Sticky" data-sticky data-sticky-wrap data-sticky-class="is-sticky" data-sticky-for-max="600" data-margin-top="100">
+            <h4 class="caption text-center">Sticky < 600</h4>
+          </div>
+          <div class="column small-12 medium-4 large-3">
+            <img src="http://placehold.it/300/6F1E00" alt="Sticky" data-sticky  data-sticky-wrap data-sticky-class="is-sticky" data-sticky-for-min="600" data-sticky-for-max="1024" data-margin-top="100">
+            <h4 class="caption text-center">600 < Sticky < 1024</h4>
+          </div>
+          <div class="column small-12 medium-4 large-3">
+            <img src="http://placehold.it/300/BC451A" alt="Sticky" data-sticky data-sticky-wrap data-sticky-class="is-sticky" data-sticky-for-min="1024" data-margin-top="100">
+            <h4 class="caption text-center">1024 < Sticky</h4>
           </div>
         </div>
       </section>
 
       <section class="container" data-sticky-container>
         <div class="row column">
-          <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-margin-top="100">
-          <img src="http://placehold.it/250x250" class="float-right" alt="Sticky" data-sticky data-sticky-for="1023" data-margin-top="100">
+          <img src="http://placehold.it/300" class="float-left" alt="Sticky" data-sticky data-margin-top="100">
+          <img src="http://placehold.it/300" class="float-right" alt="Sticky" data-sticky data-sticky-for-max="1023" data-margin-top="100">
         </div>
       </section>
 
