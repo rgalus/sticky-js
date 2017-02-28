@@ -38,6 +38,7 @@ var Sticky = function () {
       marginTop: options.marginTop || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
+      stickyBottomClass: options.stickyBottomClass || null,
       stickyContainer: options.stickyContainer || 'body'
     };
 
@@ -85,6 +86,7 @@ var Sticky = function () {
     element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
+    element.sticky.stickyBottomClass = element.getAttribute('data-sticky-bottom-class') || this.options.stickyBottomClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
@@ -288,11 +290,19 @@ var Sticky = function () {
           element.classList.remove(element.sticky.stickyClass);
         }
 
+        if (element.sticky.stickyBottomClass) {
+          element.classList.add(element.sticky.stickyBottomClass);
+        }
+
         this.css(element, {
           top: element.sticky.container.rect.top + element.sticky.container.offsetHeight - (this.scrollTop + element.sticky.rect.height) + 'px' });
       } else {
         if (element.sticky.stickyClass) {
           element.classList.add(element.sticky.stickyClass);
+        }
+
+        if (element.sticky.stickyBottomClass) {
+          element.classList.remove(element.sticky.stickyBottomClass);
         }
 
         this.css(element, { top: element.sticky.marginTop + 'px' });
