@@ -24,7 +24,6 @@ class Sticky {
     this.version = '1.1.9';
 
     this.vp = this.getViewportSize();
-    this.scrollTop = this.getScrollTopPosition();
     this.body = document.querySelector('body');
 
     this.options = {
@@ -34,6 +33,12 @@ class Sticky {
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
     };
+
+    this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
+
+    this.updateScrollTopPosition();
+    window.addEventListener('load', this.updateScrollTopPosition);
+    window.addEventListener('scroll', this.updateScrollTopPosition);
 
     this.run();
   }
@@ -215,8 +220,6 @@ class Sticky {
    * @param {node} element - Element for which event function is fired
    */
    onScrollEvents(element) {
-    this.scrollTop = this.getScrollTopPosition();
-
     if (element.sticky.active) {
       this.setPosition(element);
     }
@@ -385,12 +388,12 @@ class Sticky {
 
 
   /**
-   * Function that returns scroll position offset from top
+   * Function that updates window scroll position
    * @function
    * @return {number}
    */
-  getScrollTopPosition() {
-    return (window.pageYOffset || document.scrollTop)  - (document.clientTop || 0) || 0;
+  updateScrollTopPosition() {
+    this.scrollTop = (window.pageYOffset || document.scrollTop)  - (document.clientTop || 0) || 0;
   }
 
 
