@@ -4,7 +4,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Sticky.js
  * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
  *
- * @version 1.1.9
+ * @version 1.2.0
  * @author Rafal Galus <biuro@rafalgalus.pl>
  * @website https://rgalus.github.io/sticky-js/
  * @repo https://github.com/rgalus/sticky-js
@@ -27,10 +27,9 @@ var Sticky = function () {
     this.selector = selector;
     this.elements = [];
 
-    this.version = '1.1.9';
+    this.version = '1.2.0';
 
     this.vp = this.getViewportSize();
-    this.scrollTop = this.getScrollTopPosition();
     this.body = document.querySelector('body');
 
     this.options = {
@@ -40,6 +39,12 @@ var Sticky = function () {
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body'
     };
+
+    this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
+
+    this.updateScrollTopPosition();
+    window.addEventListener('load', this.updateScrollTopPosition);
+    window.addEventListener('scroll', this.updateScrollTopPosition);
 
     this.run();
   }
@@ -235,8 +240,6 @@ var Sticky = function () {
 
 
   Sticky.prototype.onScrollEvents = function onScrollEvents(element) {
-    this.scrollTop = this.getScrollTopPosition();
-
     if (element.sticky.active) {
       this.setPosition(element);
     }
@@ -403,14 +406,14 @@ var Sticky = function () {
   };
 
   /**
-   * Function that returns scroll position offset from top
+   * Function that updates window scroll position
    * @function
    * @return {number}
    */
 
 
-  Sticky.prototype.getScrollTopPosition = function getScrollTopPosition() {
-    return (window.pageYOffset || document.scrollTop) - (document.clientTop || 0) || 0;
+  Sticky.prototype.updateScrollTopPosition = function updateScrollTopPosition() {
+    this.scrollTop = (window.pageYOffset || document.scrollTop) - (document.clientTop || 0) || 0;
   };
 
   /**
