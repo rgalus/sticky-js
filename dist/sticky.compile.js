@@ -35,6 +35,7 @@ var Sticky = function () {
 
     this.options = {
       wrap: options.wrap || false,
+      sibling: options.sibling || false,
       marginTop: options.marginTop || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
@@ -88,6 +89,7 @@ var Sticky = function () {
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.stickyBottomClass = element.getAttribute('data-sticky-bottom-class') || this.options.stickyBottomClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
+    element.sticky.sibling = element.hasAttribute('data-sticky-sibling') ? true : this.options.sibling;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
     element.sticky.stickyContainer = this.options.stickyContainer;
@@ -108,6 +110,10 @@ var Sticky = function () {
       this.wrapElement(element);
     }
 
+    if (element.sticky.sibling) {
+      this.createSibling(element);
+    }
+
     // activate rendered element
     this.activate(element);
   };
@@ -122,6 +128,17 @@ var Sticky = function () {
   Sticky.prototype.wrapElement = function wrapElement(element) {
     element.insertAdjacentHTML('beforebegin', '<span></span>');
     element.previousSibling.appendChild(element);
+  };
+
+  /**
+   * Creates sibling element as placeholder element
+   * @function
+   * @param {node} element - Element whose place needs to be preserved
+   */
+
+
+  Sticky.prototype.createSibling = function createSibling(element) {
+    element.insertAdjacentHTML('beforebegin', '<span></span>');
   };
 
   /**
@@ -270,6 +287,14 @@ var Sticky = function () {
       });
     }
 
+    if (element.sticky.sibling) {
+      this.css(element.previousElementSibling, {
+        display: 'block',
+        width: element.sticky.rect.width + 'px',
+        height: element.sticky.rect.height + 'px'
+      });
+    }
+
     if (element.sticky.rect.top === 0 && element.sticky.container === this.body) {
       this.css(element, {
         position: 'fixed',
@@ -316,6 +341,10 @@ var Sticky = function () {
 
       if (element.sticky.wrap) {
         this.css(element.parentNode, { display: '', width: '', height: '' });
+      }
+
+      if (element.sticky.sibling) {
+        this.css(element.previousElementSibling, { display: '', width: '', height: '' });
       }
     }
   };

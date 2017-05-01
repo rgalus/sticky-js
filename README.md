@@ -104,6 +104,7 @@ sticky.destroy();
 Option | Type | Default | Description
 ------ | ---- | ------- | ----
 data-sticky-wrap | boolean | false | When it's `true` sticky element is wrapped in `<span></span>` which has sticky element dimensions. Prevents content from "jumping".
+data-sticky-sibling | boolean | false | Functions like `data-sticky-wrap`, but creates an empty sibling element with sticky element dimensions. Useful when rerendering the original sticky element contents would be destructive (for example, in an iframe).
 data-margin-top | number | 0 | Margin between page and sticky element when scrolled
 data-sticky-for | number | 0 | Breakpoint which when is bigger than viewport width, sticky is activated and when is smaller, then sticky is destroyed
 data-sticky-class | string | null | Class added to sticky element when it is stuck
