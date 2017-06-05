@@ -433,7 +433,9 @@ class Sticky {
   if (typeof exports !== 'undefined') {
     module.exports = factory;
   } else if (typeof define === 'function' && define.amd) {
-    define([], factory);
+    define([], function() {
+      return factory;
+    });
   } else {
     root.Sticky = factory;
   }
