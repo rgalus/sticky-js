@@ -32,6 +32,7 @@ class Sticky {
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
+      skipVPHeightCheck: options.skipVPHeightCheck || false,
     };
 
     this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
@@ -234,7 +235,7 @@ class Sticky {
    setPosition(element) {
     this.css(element, { position: '', width: '', top: '', left: '' });
 
-    if ((this.vp.height < element.sticky.rect.height) || !element.sticky.active) {
+    if ((!element.sticky.skipVPHeightCheck && this.vp.height < element.sticky.rect.height) || !element.sticky.active) {
       return;
     }
 
