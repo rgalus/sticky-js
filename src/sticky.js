@@ -3,7 +3,7 @@
  * Sticky.js
  * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
  *
- * @version 1.1.7
+ * @version 1.2.1
  * @author Rafal Galus <biuro@rafalgalus.pl>
  * @website https://rgalus.github.io/sticky-js/
  * @repo https://github.com/rgalus/sticky-js
@@ -21,7 +21,7 @@ class Sticky {
     this.selector = selector;
     this.elements = [];
 
-    this.version = '1.1.7';
+    this.version = '1.2.1';
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
@@ -32,6 +32,7 @@ class Sticky {
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
+      skipVPHeightCheck: options.skipVPHeightCheck || false,
     };
 
     this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
@@ -77,6 +78,7 @@ class Sticky {
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
+    element.sticky.skipVPHeightCheck = element.hasAttribute('data-sticky-skip-vp-height-check') ? true : this.options.skipVPHeightCheck;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
     element.sticky.stickyContainer = this.options.stickyContainer;
@@ -234,7 +236,7 @@ class Sticky {
    setPosition(element) {
     this.css(element, { position: '', width: '', top: '', left: '' });
 
-    if ((this.vp.height < element.sticky.rect.height) || !element.sticky.active) {
+    if ((!element.sticky.skipVPHeightCheck && this.vp.height < element.sticky.rect.height) || !element.sticky.active) {
       return;
     }
 
