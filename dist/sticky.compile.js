@@ -37,7 +37,8 @@ var Sticky = function () {
       marginTop: options.marginTop || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
-      stickyContainer: options.stickyContainer || 'body'
+      stickyContainer: options.stickyContainer || 'body',
+      skipVPHeightCheck: options.skipVPHeightCheck || false
     };
 
     this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
@@ -255,7 +256,7 @@ var Sticky = function () {
   Sticky.prototype.setPosition = function setPosition(element) {
     this.css(element, { position: '', width: '', top: '', left: '' });
 
-    if (this.vp.height < element.sticky.rect.height || !element.sticky.active) {
+    if (!element.sticky.skipVPHeightCheck && this.vp.height < element.sticky.rect.height || !element.sticky.active) {
       return;
     }
 
