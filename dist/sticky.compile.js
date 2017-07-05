@@ -4,7 +4,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Sticky.js
  * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
  *
- * @version 1.2.0
+ * @version 1.2.1
  * @author Rafal Galus <biuro@rafalgalus.pl>
  * @website https://rgalus.github.io/sticky-js/
  * @repo https://github.com/rgalus/sticky-js
@@ -27,7 +27,7 @@ var Sticky = function () {
     this.selector = selector;
     this.elements = [];
 
-    this.version = '1.2.0';
+    this.version = '1.2.1';
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
@@ -92,6 +92,7 @@ var Sticky = function () {
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
+    element.sticky.skipVPHeightCheck = element.hasAttribute('data-sticky-skip-vp-height-check') ? true : this.options.skipVPHeightCheck;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
     element.sticky.stickyContainer = this.options.stickyContainer;
