@@ -28,6 +28,7 @@ class Sticky {
 
     this.options = {
       wrap: options.wrap || false,
+      wrapClass: options.wrapClass || null,
       marginTop: options.marginTop || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
@@ -77,6 +78,7 @@ class Sticky {
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
+    element.sticky.wrapClass = element.hasAttribute('data-sticky-wrap-class') ? true : this.options.wrapClass;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
     element.sticky.stickyContainer = this.options.stickyContainer;
@@ -106,7 +108,9 @@ class Sticky {
    * @param {node} element - Element to be wrapped
    */
   wrapElement(element) {
+    var wrapClass = this.options.wrapClass || element.getAttribute('data-sticky-wrap-class');
     element.insertAdjacentHTML('beforebegin', '<span></span>');
+    if(wrapClass) element.previousSibling.classList.add(wrapClass);
     element.previousSibling.appendChild(element);
   }
 

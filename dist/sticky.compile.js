@@ -34,6 +34,7 @@ var Sticky = function () {
 
     this.options = {
       wrap: options.wrap || false,
+      wrapClass: options.wrapClass || null,
       marginTop: options.marginTop || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
@@ -91,6 +92,7 @@ var Sticky = function () {
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
+    element.sticky.wrapClass = element.hasAttribute('data-sticky-wrap-class') ? true : this.options.wrapClass;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
     element.sticky.stickyContainer = this.options.stickyContainer;
@@ -123,7 +125,9 @@ var Sticky = function () {
 
 
   Sticky.prototype.wrapElement = function wrapElement(element) {
+    var wrapClass = this.options.wrapClass || element.getAttribute('data-sticky-wrap-class');
     element.insertAdjacentHTML('beforebegin', '<span></span>');
+    if (wrapClass) element.previousSibling.classList.add(wrapClass);
     element.previousSibling.appendChild(element);
   };
 
@@ -458,7 +462,9 @@ var Sticky = function () {
   if (typeof exports !== 'undefined') {
     module.exports = factory;
   } else if (typeof define === 'function' && define.amd) {
-    define([], factory);
+    define([], function () {
+      return factory;
+    });
   } else {
     root.Sticky = factory;
   }
