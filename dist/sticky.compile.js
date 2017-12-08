@@ -282,6 +282,9 @@ var Sticky = function () {
         left: element.sticky.rect.left + 'px',
         width: element.sticky.rect.width + 'px'
       });
+      if (element.sticky.stickyClass) {
+        element.classList.add(element.sticky.stickyClass);
+      }
     } else if (this.scrollTop > element.sticky.rect.top - element.sticky.marginTop) {
       this.css(element, {
         position: 'fixed',
@@ -308,7 +311,6 @@ var Sticky = function () {
       if (element.sticky.stickyClass) {
         element.classList.remove(element.sticky.stickyClass);
       }
-
       this.css(element, { position: '', width: '', top: '', left: '' });
 
       if (element.sticky.wrap) {
