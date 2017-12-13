@@ -31,6 +31,7 @@ var Sticky = function () {
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
+    this.firstRender = false;
 
     this.options = {
       wrap: options.wrap || false,
@@ -60,13 +61,19 @@ var Sticky = function () {
 
     // wait for page to be fully loaded
     var pageLoaded = setInterval(function () {
-      if (document.readyState === 'interactive') {
-        clearInterval(pageLoaded);
+      if (document.readyState === 'interactive' && _this.firstRender === false) {
+        _this.firstRender = true;
 
         var elements = document.querySelectorAll(_this.selector);
         _this.forEach(elements, function (element) {
           return _this.renderElement(element);
         });
+        return;
+      }
+
+      if (document.readyState === 'complete') {
+        clearInterval(pageLoaded);
+        _this.update();
       }
     }, 10);
   };

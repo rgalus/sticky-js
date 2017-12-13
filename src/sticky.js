@@ -25,6 +25,7 @@ class Sticky {
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
+    this.firstRender = false;
 
     this.options = {
       wrap: options.wrap || false,
@@ -51,11 +52,17 @@ class Sticky {
   run() {
     // wait for page to be fully loaded
     const pageLoaded = setInterval(() => {
-      if (document.readyState === 'interactive') {
-        clearInterval(pageLoaded);
+      if (document.readyState === 'interactive' && this.firstRender === false) {
+        this.firstRender = true;
 
         const elements = document.querySelectorAll(this.selector);
         this.forEach(elements, (element) => this.renderElement(element));
+        return;
+      }
+
+      if (document.readyState === 'complete') {
+        clearInterval(pageLoaded);
+        this.update();
       }
     }, 10);
   }
