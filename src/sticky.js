@@ -51,7 +51,7 @@ class Sticky {
   run() {
     // wait for page to be fully loaded
     const pageLoaded = setInterval(() => {
-      if (document.readyState === 'complete') {
+      if (document.readyState === 'interactive') {
         clearInterval(pageLoaded);
 
         const elements = document.querySelectorAll(this.selector);

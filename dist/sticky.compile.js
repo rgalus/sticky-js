@@ -60,7 +60,7 @@ var Sticky = function () {
 
     // wait for page to be fully loaded
     var pageLoaded = setInterval(function () {
-      if (document.readyState === 'complete') {
+      if (document.readyState === 'interactive') {
         clearInterval(pageLoaded);
 
         var elements = document.querySelectorAll(_this.selector);
@@ -458,7 +458,9 @@ var Sticky = function () {
   if (typeof exports !== 'undefined') {
     module.exports = factory;
   } else if (typeof define === 'function' && define.amd) {
-    define([], factory);
+    define([], function () {
+      return factory;
+    });
   } else {
     root.Sticky = factory;
   }
