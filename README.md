@@ -109,6 +109,12 @@ data-margin-top | marginTop | number | 0 | Margin between page and sticky elemen
 data-sticky-for | stickyFor | number | 0 | Breakpoint which when is bigger than viewport width, sticky is activated and when is smaller, then sticky is destroyed
 data-sticky-class | stickyClass | string | null | Class added to sticky element when it is stuck
 
+## Callbacks
+
+Callback | Params
+------ | ---------
+onSetPosition| element
+
 ### Development
 
 Clone this repository and run

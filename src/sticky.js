@@ -33,6 +33,7 @@ class Sticky {
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
+      onSetPosition: options.onSetPosition || function(){}
     };
 
     this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
@@ -264,6 +265,8 @@ class Sticky {
         left: element.sticky.rect.left + 'px',
         width: element.sticky.rect.width + 'px',
       });
+      this.options.onSetPosition.call(this,element);
+
       if (element.sticky.stickyClass) {
         element.classList.add(element.sticky.stickyClass);
       }
@@ -274,7 +277,7 @@ class Sticky {
         width: element.sticky.rect.width + 'px',
         left: element.sticky.rect.left + 'px',
       });
-
+      this.options.onSetPosition.call(this,element);
       if (
         (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop)
         > (element.sticky.container.rect.top + element.sticky.container.offsetHeight)
