@@ -294,7 +294,7 @@ var Sticky = function () {
         width: element.sticky.rect.width + 'px',
         left: element.sticky.rect.left + 'px'
       });
-      this.options.onSetPosition.call(this, element);
+
       if (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop > element.sticky.container.rect.top + element.sticky.container.offsetHeight) {
 
         if (element.sticky.stickyClass) {
@@ -310,6 +310,7 @@ var Sticky = function () {
 
         this.css(element, { top: element.sticky.marginTop + 'px' });
       }
+      this.options.onSetPosition.call(this, element);
     } else {
       if (element.sticky.stickyClass) {
         element.classList.remove(element.sticky.stickyClass);
