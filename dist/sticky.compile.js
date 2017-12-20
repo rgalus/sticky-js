@@ -329,9 +329,9 @@ var Sticky = function () {
   Sticky.prototype.update = function update() {
     var _this5 = this;
 
-    this.elements = document.querySelectorAll(this.selector);
-    console.log('derrick test', this.elements);
-    this.forEach(this.elements, function (element) {
+    this.elements = [];
+    var elements = document.querySelectorAll(this.selector);
+    this.forEach(elements, function (element) {
       _this5.renderElement(element);
       _this5.activate(element);
       _this5.setPosition(element);

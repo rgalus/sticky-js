@@ -312,9 +312,9 @@ class Sticky {
    * @function
    */
    update() {
-    this.elements = document.querySelectorAll(this.selector);
-    console.log( 'derrick test', this.elements );
-    this.forEach(this.elements, (element) => {
+    this.elements = [];
+    const elements = document.querySelectorAll(this.selector);
+    this.forEach(elements, (element) => {
       this.renderElement(element);
       this.activate(element);
       this.setPosition(element);
