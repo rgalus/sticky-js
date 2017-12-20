@@ -312,12 +312,10 @@ class Sticky {
    * @function
    */
    update() {
-    this.forEach(this.elements, (element) => {
-      element.sticky.rect = this.getRectangle(element);
-      element.sticky.container.rect = this.getRectangle(element.sticky.container);
-
-      this.activate(element);
-      this.setPosition(element);
+    const elements = document.querySelectorAll(this.selector);
+    this.elements = [];
+    this.forEach(elements, (element) => {
+      this.renderElement(element);
     });
    }
 

@@ -329,12 +329,10 @@ var Sticky = function () {
   Sticky.prototype.update = function update() {
     var _this5 = this;
 
-    this.forEach(this.elements, function (element) {
-      element.sticky.rect = _this5.getRectangle(element);
-      element.sticky.container.rect = _this5.getRectangle(element.sticky.container);
-
-      _this5.activate(element);
-      _this5.setPosition(element);
+    var elements = document.querySelectorAll(this.selector);
+    this.elements = [];
+    this.forEach(elements, function (element) {
+      _this5.renderElement(element);
     });
   };
 
