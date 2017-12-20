@@ -313,6 +313,7 @@ class Sticky {
    */
    update() {
     this.elements = document.querySelectorAll(this.selector);
+    console.log( 'derrick test', this.elements );
     this.forEach(this.elements, (element) => {
       this.renderElement(element);
       this.activate(element);
