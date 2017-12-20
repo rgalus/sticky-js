@@ -312,12 +312,10 @@ class Sticky {
    * @function
    */
    update() {
-    this.elements = [];
     const elements = document.querySelectorAll(this.selector);
+    this.elements = [];
     this.forEach(elements, (element) => {
       this.renderElement(element);
-      this.activate(element);
-      this.setPosition(element);
     });
    }
 
