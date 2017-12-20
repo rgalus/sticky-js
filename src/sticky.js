@@ -315,9 +315,6 @@ class Sticky {
     this.elements = document.querySelectorAll(this.selector);
     this.forEach(this.elements, (element) => {
       this.renderElement(element);
-      element.sticky.rect = this.getRectangle(element);
-      element.sticky.container.rect = this.getRectangle(element.sticky.container);
-
       this.activate(element);
       this.setPosition(element);
     });
