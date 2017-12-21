@@ -144,6 +144,7 @@ var Sticky = function () {
   Sticky.prototype.activate = function activate(element) {
     if (element.sticky.rect.top + element.sticky.rect.height < element.sticky.container.rect.top + element.sticky.container.rect.height && element.sticky.stickyFor < this.vp.width && !element.sticky.active) {
       element.sticky.active = true;
+      element.setAttribute('data-sticky-rendered', '');
     }
 
     if (this.elements.indexOf(element) < 0) {
@@ -330,9 +331,19 @@ var Sticky = function () {
     var _this5 = this;
 
     var elements = document.querySelectorAll(this.selector);
-    this.elements = [];
     this.forEach(elements, function (element) {
-      _this5.renderElement(element);
+      // if this element has not already been rendered
+      if (element.getAttribute('data-sticky-rendered') === null) {
+        element.setAttribute('data-sticky-rendered', '');
+        _this5.elements.push(element);
+        _this5.renderElement(element);
+      } else {
+        element.sticky.rect = _this5.getRectangle(element);
+        element.sticky.container.rect = _this5.getRectangle(element.sticky.container);
+
+        _this5.activate(element);
+        _this5.setPosition(element);
+      }
     });
   };
 

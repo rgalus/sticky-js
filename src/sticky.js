@@ -130,6 +130,7 @@ class Sticky {
       && !element.sticky.active
     ) {
       element.sticky.active = true;
+      element.setAttribute( 'data-sticky-rendered', '' );
     }
 
     if (this.elements.indexOf(element) < 0) {
@@ -313,9 +314,19 @@ class Sticky {
    */
    update() {
     const elements = document.querySelectorAll(this.selector);
-    this.elements = [];
     this.forEach(elements, (element) => {
-      this.renderElement(element);
+      // if this element has not already been rendered
+      if ( element.getAttribute( 'data-sticky-rendered' ) === null ) {
+        element.setAttribute( 'data-sticky-rendered', '' );
+        this.elements.push( element );
+        this.renderElement(element);
+      } else {
+        element.sticky.rect = this.getRectangle(element);
+        element.sticky.container.rect = this.getRectangle(element.sticky.container);
+
+        this.activate(element);
+        this.setPosition(element);
+      }
     });
    }
 
