@@ -25,6 +25,7 @@ class Sticky {
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
+    this.firstRender = false;
 
     this.options = {
       wrap: options.wrap || false,
@@ -51,11 +52,17 @@ class Sticky {
   run() {
     // wait for page to be fully loaded
     const pageLoaded = setInterval(() => {
-      if (document.readyState === 'complete') {
-        clearInterval(pageLoaded);
+      if (document.readyState === 'interactive' && this.firstRender === false) {
+        this.firstRender = true;
 
         const elements = document.querySelectorAll(this.selector);
         this.forEach(elements, (element) => this.renderElement(element));
+        return;
+      }
+
+      if (document.readyState === 'complete') {
+        clearInterval(pageLoaded);
+        this.update();
       }
     }, 10);
   }
@@ -123,6 +130,7 @@ class Sticky {
       && !element.sticky.active
     ) {
       element.sticky.active = true;
+      element.setAttribute( 'data-sticky-rendered', '' );
     }
 
     if (this.elements.indexOf(element) < 0) {
@@ -305,12 +313,20 @@ class Sticky {
    * @function
    */
    update() {
-    this.forEach(this.elements, (element) => {
-      element.sticky.rect = this.getRectangle(element);
-      element.sticky.container.rect = this.getRectangle(element.sticky.container);
+    const elements = document.querySelectorAll(this.selector);
+    this.forEach(elements, (element) => {
+      // if this element has not already been rendered
+      if ( element.getAttribute( 'data-sticky-rendered' ) === null ) {
+        element.setAttribute( 'data-sticky-rendered', '' );
+        this.elements.push( element );
+        this.renderElement(element);
+      } else {
+        element.sticky.rect = this.getRectangle(element);
+        element.sticky.container.rect = this.getRectangle(element.sticky.container);
 
-      this.activate(element);
-      this.setPosition(element);
+        this.activate(element);
+        this.setPosition(element);
+      }
     });
    }
 

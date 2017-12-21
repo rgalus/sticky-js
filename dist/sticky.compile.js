@@ -31,6 +31,7 @@ var Sticky = function () {
 
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
+    this.firstRender = false;
 
     this.options = {
       wrap: options.wrap || false,
@@ -60,13 +61,19 @@ var Sticky = function () {
 
     // wait for page to be fully loaded
     var pageLoaded = setInterval(function () {
-      if (document.readyState === 'complete') {
-        clearInterval(pageLoaded);
+      if (document.readyState === 'interactive' && _this.firstRender === false) {
+        _this.firstRender = true;
 
         var elements = document.querySelectorAll(_this.selector);
         _this.forEach(elements, function (element) {
           return _this.renderElement(element);
         });
+        return;
+      }
+
+      if (document.readyState === 'complete') {
+        clearInterval(pageLoaded);
+        _this.update();
       }
     }, 10);
   };
@@ -137,6 +144,7 @@ var Sticky = function () {
   Sticky.prototype.activate = function activate(element) {
     if (element.sticky.rect.top + element.sticky.rect.height < element.sticky.container.rect.top + element.sticky.container.rect.height && element.sticky.stickyFor < this.vp.width && !element.sticky.active) {
       element.sticky.active = true;
+      element.setAttribute('data-sticky-rendered', '');
     }
 
     if (this.elements.indexOf(element) < 0) {
@@ -322,12 +330,20 @@ var Sticky = function () {
   Sticky.prototype.update = function update() {
     var _this5 = this;
 
-    this.forEach(this.elements, function (element) {
-      element.sticky.rect = _this5.getRectangle(element);
-      element.sticky.container.rect = _this5.getRectangle(element.sticky.container);
+    var elements = document.querySelectorAll(this.selector);
+    this.forEach(elements, function (element) {
+      // if this element has not already been rendered
+      if (element.getAttribute('data-sticky-rendered') === null) {
+        element.setAttribute('data-sticky-rendered', '');
+        _this5.elements.push(element);
+        _this5.renderElement(element);
+      } else {
+        element.sticky.rect = _this5.getRectangle(element);
+        element.sticky.container.rect = _this5.getRectangle(element.sticky.container);
 
-      _this5.activate(element);
-      _this5.setPosition(element);
+        _this5.activate(element);
+        _this5.setPosition(element);
+      }
     });
   };
 
@@ -458,7 +474,9 @@ var Sticky = function () {
   if (typeof exports !== 'undefined') {
     module.exports = factory;
   } else if (typeof define === 'function' && define.amd) {
-    define([], factory);
+    define([], function () {
+      return factory;
+    });
   } else {
     root.Sticky = factory;
   }
