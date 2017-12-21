@@ -181,6 +181,11 @@ class Sticky {
     element.sticky.rect = this.getRectangle(element);
     element.sticky.container.rect = this.getRectangle(element.sticky.container);
 
+    if(this.vp.height < element.sticky.rect.height){
+      element.sticky.active = false;
+      this.options.onDeactivate.call(this, element);
+    }
+
     if (
       ((element.sticky.rect.top + element.sticky.rect.height) < (element.sticky.container.rect.top + element.sticky.container.rect.height))
       && (element.sticky.stickyFor < this.vp.width)
