@@ -33,7 +33,8 @@ class Sticky {
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
-      onSetPosition: options.onSetPosition || function(){}
+      onSetPosition: options.onSetPosition || function(){},
+      onDeactivate: options.onDeactivate || function(){},
     };
 
     this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
@@ -192,6 +193,7 @@ class Sticky {
       && element.sticky.active
     ) {
       element.sticky.active = false;
+      this.options.onDeactivate.call(this,element);
     }
 
     this.setPosition(element);

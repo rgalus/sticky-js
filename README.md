@@ -114,6 +114,7 @@ data-sticky-class | stickyClass | string | null | Class added to sticky element 
 Callback | Params
 ------ | ---------
 onSetPosition| element
+onDeactivate| element
 
 ### Development
 
