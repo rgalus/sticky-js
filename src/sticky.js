@@ -290,9 +290,9 @@ class Sticky {
         > (element.sticky.container.rect.top + element.sticky.container.offsetHeight)
       ) {
 
-        if (element.sticky.stickyClass) {
-          element.classList.remove(element.sticky.stickyClass);
-        }
+        // if (element.sticky.stickyClass) {
+        //   element.classList.remove(element.sticky.stickyClass);
+        // }
 
         this.css(element, {
           top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + 'px' }
