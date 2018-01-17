@@ -28,10 +28,13 @@ class Sticky {
 
     this.options = {
       wrap: options.wrap || false,
+      wrapClass: options.wrapClass || null,
       marginTop: options.marginTop || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
+      onSetPosition: options.onSetPosition || function(){},
+      onDeactivate: options.onDeactivate || function(){},
     };
 
     this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
@@ -77,6 +80,7 @@ class Sticky {
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
+    element.sticky.wrapClass = element.hasAttribute('data-sticky-wrap-class') ? true : this.options.wrapClass;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
     element.sticky.stickyContainer = this.options.stickyContainer;
@@ -106,7 +110,9 @@ class Sticky {
    * @param {node} element - Element to be wrapped
    */
   wrapElement(element) {
+    var wrapClass = this.options.wrapClass || element.getAttribute('data-sticky-wrap-class');
     element.insertAdjacentHTML('beforebegin', '<span></span>');
+    if(wrapClass) element.previousSibling.classList.add(wrapClass);
     element.previousSibling.appendChild(element);
   }
 
@@ -175,6 +181,11 @@ class Sticky {
     element.sticky.rect = this.getRectangle(element);
     element.sticky.container.rect = this.getRectangle(element.sticky.container);
 
+    if(this.vp.height < element.sticky.rect.height){
+      element.sticky.active = false;
+      this.options.onDeactivate.call(this, element);
+    }
+
     if (
       ((element.sticky.rect.top + element.sticky.rect.height) < (element.sticky.container.rect.top + element.sticky.container.rect.height))
       && (element.sticky.stickyFor < this.vp.width)
@@ -187,6 +198,7 @@ class Sticky {
       && element.sticky.active
     ) {
       element.sticky.active = false;
+      this.options.onDeactivate.call(this,element);
     }
 
     this.setPosition(element);
@@ -260,6 +272,12 @@ class Sticky {
         left: element.sticky.rect.left + 'px',
         width: element.sticky.rect.width + 'px',
       });
+      this.options.onSetPosition.call(this,element);
+
+      if (element.sticky.stickyClass) {
+        element.classList.add(element.sticky.stickyClass);
+      }
+
     } else if (this.scrollTop > (element.sticky.rect.top - element.sticky.marginTop)) {
       this.css(element, {
         position: 'fixed',
@@ -272,9 +290,9 @@ class Sticky {
         > (element.sticky.container.rect.top + element.sticky.container.offsetHeight)
       ) {
 
-        if (element.sticky.stickyClass) {
-          element.classList.remove(element.sticky.stickyClass);
-        }
+        // if (element.sticky.stickyClass) {
+        //   element.classList.remove(element.sticky.stickyClass);
+        // }
 
         this.css(element, {
           top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + 'px' }
@@ -286,11 +304,11 @@ class Sticky {
 
         this.css(element, { top: element.sticky.marginTop + 'px' });
       }
+      this.options.onSetPosition.call(this,element);
     } else {
       if (element.sticky.stickyClass) {
         element.classList.remove(element.sticky.stickyClass);
       }
-
       this.css(element, { position: '', width: '', top: '', left: '' });
 
       if (element.sticky.wrap) {
