@@ -29,6 +29,7 @@ class Sticky {
     this.options = {
       wrap: options.wrap || false,
       marginTop: options.marginTop || 0,
+      marginBottom: options.marginBottom || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
@@ -74,6 +75,7 @@ class Sticky {
     element.sticky.active = false;
 
     element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
+    element.sticky.marginBottom = parseInt(element.getAttribute('data-margin-bottom')) || this.options.marginBottom;
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
@@ -269,7 +271,7 @@ class Sticky {
 
       if (
         (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop)
-        > (element.sticky.container.rect.top + element.sticky.container.offsetHeight)
+        > (element.sticky.container.rect.top + element.sticky.container.offsetHeight - element.sticky.marginBottom)
       ) {
 
         if (element.sticky.stickyClass) {
@@ -277,7 +279,7 @@ class Sticky {
         }
 
         this.css(element, {
-          top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + 'px' }
+          top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height + element.sticky.marginBottom) + 'px' }
         );
       } else {
         if (element.sticky.stickyClass) {
