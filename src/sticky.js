@@ -54,7 +54,14 @@ class Sticky {
       if (document.readyState === 'complete') {
         clearInterval(pageLoaded);
 
-        const elements = document.querySelectorAll(this.selector);
+        if( typeof this.selector === 'object' )
+        {
+          const elements = this.selector;
+        }
+        else
+        {
+          const elements = document.querySelectorAll(this.selector);
+        }
         this.forEach(elements, (element) => this.renderElement(element));
       }
     }, 10);
