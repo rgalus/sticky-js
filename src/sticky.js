@@ -151,11 +151,22 @@ class Sticky {
             element.sticky.scrollEvent = true;
         }
 
-        element.on("remove", function () {
-            element.sticky.destroy();
-        });
+        element.sticky.removeListener = () => this.onRemoveElementEvents(element);
+        window.addEventListener('remove', element.sticky.removeListener);
 
         this.setPosition(element);
+    }
+
+    /**
+     * On remove the element, destroy sticky
+     *
+     * @param element
+     */
+    onRemoveElementEvents(element){
+        if( element.sticky )
+        {
+            this.destroy();
+        }
     }
 
 
