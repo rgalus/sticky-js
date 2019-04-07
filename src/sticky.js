@@ -156,8 +156,11 @@ class Sticky {
    * @param {node} element - Element for which resize events are initialised
    */
    initResizeEvents(element) {
-    element.sticky.resizeListener = () => this.onResizeEvents(element);
-    window.addEventListener('resize', element.sticky.resizeListener);
+     if( element.sticky )
+     {
+        element.sticky.resizeListener = () => this.onResizeEvents(element);
+        window.addEventListener('resize', element.sticky.resizeListener);
+     }
    }
 
 
@@ -167,7 +170,10 @@ class Sticky {
    * @param {node} element - Element from which listener is deleted
    */
    destroyResizeEvents(element) {
-    window.removeEventListener('resize', element.sticky.resizeListener);
+     if( element.sticky )
+     {
+        window.removeEventListener('resize', element.sticky.resizeListener);
+     }
    }
 
 
