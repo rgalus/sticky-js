@@ -53,6 +53,11 @@ class Sticky {
     const pageLoaded = setInterval(() => {
       if (document.readyState === 'complete') {
         clearInterval(pageLoaded);
+        
+        if( typeof this.selector === 'undefined' )
+        {
+          return;
+        }
 
         //allow passing a single dom element, an array of elements, or a string selector
         const elements = typeof this.selector === 'object' ? (typeof this.selector.length === 'undefined' ? [this.selector] : this.selector) : document.querySelectorAll(this.selector);
