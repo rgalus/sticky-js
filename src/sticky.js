@@ -207,13 +207,16 @@ class Sticky {
 
 
   /**
-   * Function which is adding onScrollEvents to window listener and assigns function to element as scrollListener
+   * Function which is adding onScrollEvents to window listener and assigns function to element as 3
    * @function
    * @param {node} element - Element for which scroll events are initialised
    */
    initScrollEvents(element) {
-    element.sticky.scrollListener = () => this.onScrollEvents(element);
-    window.addEventListener('scroll', element.sticky.scrollListener);
+     if( element.sticky )
+     {
+        element.sticky.scrollListener = () => this.onScrollEvents(element);
+        window.addEventListener('scroll', element.sticky.scrollListener);
+     }
    }
 
 
@@ -223,7 +226,10 @@ class Sticky {
    * @param {node} element - Element from which listener is deleted
    */
    destroyScrollEvents(element) {
-    window.removeEventListener('scroll', element.sticky.scrollListener);
+     if( element.sticky )
+     {
+        window.removeEventListener('scroll', element.sticky.scrollListener);
+     }
    }
 
 
