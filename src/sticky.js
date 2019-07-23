@@ -320,6 +320,9 @@ class Sticky {
    * @function
    */
    destroy() {
+    window.removeEventListener('load', this.updateScrollTopPosition);
+    window.removeEventListener('scroll', this.updateScrollTopPosition);
+
     this.forEach(this.elements, (element) => {
       this.destroyResizeEvents(element);
       this.destroyScrollEvents(element);
