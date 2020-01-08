@@ -340,6 +340,9 @@ var Sticky = function () {
   Sticky.prototype.destroy = function destroy() {
     var _this6 = this;
 
+    window.removeEventListener('load', this.updateScrollTopPosition);
+    window.removeEventListener('scroll', this.updateScrollTopPosition);
+
     this.forEach(this.elements, function (element) {
       _this6.destroyResizeEvents(element);
       _this6.destroyScrollEvents(element);
@@ -458,7 +461,9 @@ var Sticky = function () {
   if (typeof exports !== 'undefined') {
     module.exports = factory;
   } else if (typeof define === 'function' && define.amd) {
-    define([], factory);
+    define([], function () {
+      return factory;
+    });
   } else {
     root.Sticky = factory;
   }
