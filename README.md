@@ -9,7 +9,7 @@
 ## Features
 
 - Written in vanilla javascript, no dependencies needed
-- Lightweight (minified: ~6.08kb, gzipped: ~1.67kb)
+- Lightweight (minified: ~6.73kb, gzipped: ~1.85kb)
 - It can be sticky to the entire page or to selected parent container
 - No additional CSS needed
 
