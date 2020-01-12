@@ -8,7 +8,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
  * Sticky.js
  * Library for sticky elements written in vanilla javascript. With this library you can easily set sticky elements on your website. It's also responsive.
  *
- * @version 1.2.1
+ * @version 1.2.2
  * @author Rafal Galus <biuro@rafalgalus.pl>
  * @website https://rgalus.github.io/sticky-js/
  * @repo https://github.com/rgalus/sticky-js
@@ -31,7 +31,7 @@ function () {
 
     this.selector = selector;
     this.elements = [];
-    this.version = '1.2.1';
+    this.version = '1.2.2';
     this.vp = this.getViewportSize();
     this.body = document.querySelector('body');
     this.options = {
