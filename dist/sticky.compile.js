@@ -464,11 +464,13 @@ function () {
   }, {
     key: "css",
     value: function css(element, properties) {
-      for (var property in properties) {
-        if (properties.hasOwnProperty(property)) {
-          element.style[property] = properties[property];
+      window.requestAnimationFrame(function () {
+        for (var property in properties) {
+          if (properties.hasOwnProperty(property)) {
+            element.style[property] = properties[property];
+          }
         }
-      }
+      });
     }
   }]);
 
