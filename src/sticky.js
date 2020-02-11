@@ -420,11 +420,13 @@ class Sticky {
    * @param {object} properties - CSS properties that will be added/removed from specified element
    */
   css(element, properties) {
-    for (let property in properties) {
-      if (properties.hasOwnProperty(property)) {
-        element.style[property] = properties[property];
+    window.requestAnimationFrame(function() {
+      for (let property in properties) {
+        if (properties.hasOwnProperty(property)) {
+          element.style[property] = properties[property];
+        }
       }
-    }
+    })
   }
 }
 
