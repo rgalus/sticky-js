@@ -188,8 +188,8 @@ function () {
     key: "onResizeEvents",
     value: function onResizeEvents(element) {
       this.vp = this.getViewportSize();
-      element.sticky.rect = this.getRectangle(element);
-      element.sticky.container.rect = this.getRectangle(element.sticky.container);
+      element.sticky.rect = this.getRectangle(element, false);
+      element.sticky.container.rect = this.getRectangle(element.sticky.container, false);
 
       if (element.sticky.rect.top + element.sticky.rect.height < element.sticky.container.rect.top + element.sticky.container.rect.height && element.sticky.stickyFor < this.vp.width && !element.sticky.active) {
         element.sticky.active = true;
@@ -390,13 +390,13 @@ function () {
 
   }, {
     key: "getRectangle",
-    value: function getRectangle(element) {
+    value: function getRectangle(element, useAnimationFrame) {
       this.css(element, {
         position: '',
         width: '',
         top: '',
         left: ''
-      });
+      }, useAnimationFrame);
       var width = Math.max(element.offsetWidth, element.clientWidth, element.scrollWidth);
       var height = Math.max(element.offsetHeight, element.clientHeight, element.scrollHeight);
       var top = 0;
@@ -463,11 +463,25 @@ function () {
 
   }, {
     key: "css",
-    value: function css(element, properties) {
-      window.requestAnimationFrame(function () {
+    value: function css(element, properties, useAnimationFrame) {
+      if (typeof useAnimationFrame === 'undefined') {
+        useAnimationFrame = true;
+      }
+
+      if (!useAnimationFrame) {
         for (var property in properties) {
           if (properties.hasOwnProperty(property)) {
             element.style[property] = properties[property];
+          }
+        }
+
+        return;
+      }
+
+      window.requestAnimationFrame(function () {
+        for (var _property in properties) {
+          if (properties.hasOwnProperty(_property)) {
+            element.style[_property] = properties[_property];
           }
         }
       });
