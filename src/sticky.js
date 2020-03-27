@@ -110,6 +110,17 @@ class Sticky {
     element.previousSibling.appendChild(element);
   }
 
+  /**
+   * Resets the wrapper width & height to allow correct computation of element's rectangle
+   * @function
+   * @param {node} element - Element that is wrapped
+   */
+  resetWrapperRectangle(element) {
+    this.css(element.parentNode, {
+      width: '',
+      height: ''
+    });
+  }
 
   /**
    * Function that activates element when specified conditions are met and then initalise events
@@ -171,6 +182,10 @@ class Sticky {
    */
    onResizeEvents(element) {
     this.vp = this.getViewportSize();
+
+    if (element.sticky.wrap) {
+      this.resetWrapperRectangle(element);
+    }
 
     element.sticky.rect = this.getRectangle(element);
     element.sticky.container.rect = this.getRectangle(element.sticky.container);
@@ -236,6 +251,10 @@ class Sticky {
 
     if ((this.vp.height < element.sticky.rect.height) || !element.sticky.active) {
       return;
+    }
+
+    if (element.sticky.wrap) {
+      this.resetWrapperRectangle(element);
     }
 
     if (!element.sticky.rect.width) {
@@ -306,6 +325,9 @@ class Sticky {
    */
    update() {
     this.forEach(this.elements, (element) => {
+      if (element.sticky.wrap) {
+        this.resetWrapperRectangle(element);
+      }
       element.sticky.rect = this.getRectangle(element);
       element.sticky.container.rect = this.getRectangle(element.sticky.container);
 
