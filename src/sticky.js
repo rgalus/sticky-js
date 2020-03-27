@@ -91,7 +91,7 @@ class Sticky {
       element.onload = () => element.sticky.rect = this.getRectangle(element);
     }
 
-    if (element.sticky.wrap) {
+    if (element.sticky.wrap && element.parentNode.getAttribute('data-sticky-wrapper') === null) {
       this.wrapElement(element);
     }
 
