@@ -107,6 +107,21 @@ data-sticky-wrap | boolean | false | When it's `true` sticky element is wrapped 
 data-margin-top | number | 0 | Margin between page and sticky element when scrolled
 data-sticky-for | number | 0 | Breakpoint which when is bigger than viewport width, sticky is activated and when is smaller, then sticky is destroyed
 data-sticky-class | string | null | Class added to sticky element when it is stuck
+data-anchor | string | null | ID of bottom anchor that unstucks the element when passed
+
+## Anchor
+
+By default the sticky element is stuck until the end of container (mostly until end of page).
+If you want to unstuck the element after having passed a certain element you only need to set that element's id as anchor option.
+
+```html
+<div class="sticky" data-anchor="foo">
+  sticky element that gets unstuck after having passed the example element
+</div>
+<diV id="foo">
+  stop being sticky when passing me
+</div>
+```
 
 ### Development
 

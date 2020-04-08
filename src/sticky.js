@@ -29,6 +29,7 @@ class Sticky {
     this.options = {
       wrap: options.wrap || false,
       marginTop: options.marginTop || 0,
+      anchor: options.anchor || null,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
@@ -74,6 +75,8 @@ class Sticky {
     element.sticky.active = false;
 
     element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
+    element.sticky.anchorId = element.getAttribute('data-anchor') || this.options.anchor;
+    element.sticky.anchor = element.sticky.anchorId ? document.querySelector('#' + element.sticky.anchorId) : null;
     element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
     element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
     element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
@@ -250,6 +253,12 @@ class Sticky {
       });
     }
 
+    const wrapperTop = element.parentNode.offsetTop;
+    const elementHeight = element.offsetHeight;
+    const anchorTop = element.sticky.anchor ? element.sticky.anchor.offsetTop : element.sticky.container.rect.top;
+    const anchorBottom = element.sticky.anchor ? anchorTop - element.offsetHeight : element.sticky.container.offsetHeight - element.offsetHeight;
+    const passedAnchor = this.scrollTop > anchorBottom - element.sticky.marginTop;
+
     if (
       element.sticky.rect.top === 0
       && element.sticky.container === this.body
@@ -262,7 +271,7 @@ class Sticky {
       });
     } else if (this.scrollTop > (element.sticky.rect.top - element.sticky.marginTop)) {
       this.css(element, {
-        position: 'fixed',
+        position: passedAnchor ? 'relative' : 'fixed',
         width: element.sticky.rect.width + 'px',
         left: element.sticky.rect.left + 'px',
       });
@@ -276,15 +285,25 @@ class Sticky {
           element.classList.remove(element.sticky.stickyClass);
         }
 
-        this.css(element, {
-          top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + 'px' }
-        );
+        if (passedAnchor) {
+          this.css(element, {
+            top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + anchorTop - wrapperTop - elementHeight + 'px' }
+          );
+        } else {
+          this.css(element, {
+            top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height) + 'px' }
+          );
+        }
       } else {
         if (element.sticky.stickyClass) {
           element.classList.add(element.sticky.stickyClass);
         }
 
-        this.css(element, { top: element.sticky.marginTop + 'px' });
+        if (passedAnchor) {
+          this.css(element, { top: element.sticky.marginTop + anchorTop - wrapperTop - elementHeight + 'px' });
+        } else {
+          this.css(element, { top: element.sticky.marginTop + 'px' });
+        }
       }
     } else {
       if (element.sticky.stickyClass) {
