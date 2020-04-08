@@ -255,8 +255,9 @@ class Sticky {
 
     const wrapperTop = element.parentNode.offsetTop;
     const elementHeight = element.offsetHeight;
-    const anchorTop = element.sticky.anchor ? element.sticky.anchor.offsetTop : element.sticky.container.rect.top;
-    const anchorBottom = element.sticky.anchor ? anchorTop - element.offsetHeight : element.sticky.container.offsetHeight - element.offsetHeight;
+    const anchorVisible = element.sticky.anchor && element.sticky.anchor.offsetParent !== null;
+    const anchorTop = anchorVisible ? element.sticky.anchor.offsetTop : element.sticky.container.rect.top;
+    const anchorBottom = anchorVisible ? anchorTop - element.offsetHeight : element.sticky.container.offsetHeight - element.offsetHeight;
     const passedAnchor = this.scrollTop > anchorBottom - element.sticky.marginTop;
 
     if (
