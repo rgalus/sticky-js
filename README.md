@@ -108,6 +108,18 @@ data-margin-top | number | 0 | Margin between page and sticky element when scrol
 data-sticky-for | number | 0 | Breakpoint which when is bigger than viewport width, sticky is activated and when is smaller, then sticky is destroyed
 data-sticky-class | string | null | Class added to sticky element when it is stuck
 
+## Wrapper
+
+When setting the `wrap` option to `true`, the sticky element is wrapped in a `<span></span>` by default. If you need more control over the wrapper you can wrap the element yourself and just need to add `data-sticky-wrapper` to the wrapper so it gets recognized.
+
+```html
+<div data-sticky-wrapper>
+  <div class="sticky">
+    sticky element with a custom wrapper
+  </div>
+</div>
+```
+
 ### Development
 
 Clone this repository and run
