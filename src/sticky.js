@@ -175,8 +175,8 @@ class Sticky {
    onResizeEvents(element) {
     this.vp = this.getViewportSize();
 
-    element.sticky.rect = this.getRectangle(element);
-    element.sticky.container.rect = this.getRectangle(element.sticky.container);
+    element.sticky.rect = this.getRectangle(element, false);
+    element.sticky.container.rect = this.getRectangle(element.sticky.container, false);
 
     if (
       ((element.sticky.rect.top + element.sticky.rect.height) < (element.sticky.container.rect.top + element.sticky.container.rect.height))
@@ -361,8 +361,8 @@ class Sticky {
    * @param {node} element - Element which position & rectangle are returned
    * @return {object}
    */
-  getRectangle(element) {
-    this.css(element, { position: '', width: '', top: '', left: '' });
+  getRectangle(element, useAnimationFrame) {
+    this.css(element, { position: '', width: '', top: '', left: '' }, useAnimationFrame);
 
     const width = Math.max(element.offsetWidth, element.clientWidth, element.scrollWidth);
     const height = Math.max(element.offsetHeight, element.clientHeight, element.scrollHeight);
@@ -422,12 +422,28 @@ class Sticky {
    * @param {node} element - DOM element
    * @param {object} properties - CSS properties that will be added/removed from specified element
    */
-  css(element, properties) {
-    for (let property in properties) {
-      if (properties.hasOwnProperty(property)) {
-        element.style[property] = properties[property];
-      }
+  css(element, properties, useAnimationFrame) {
+
+    if (typeof(useAnimationFrame) === 'undefined') {
+      useAnimationFrame = true;
     }
+
+    if(!useAnimationFrame) {
+      for (let property in properties) {
+        if (properties.hasOwnProperty(property)) {
+          element.style[property] = properties[property];
+        }
+      }
+      return;
+    }
+
+    window.requestAnimationFrame(function() {
+      for (let property in properties) {
+        if (properties.hasOwnProperty(property)) {
+          element.style[property] = properties[property];
+        }
+      }
+    })
   }
 }
 
