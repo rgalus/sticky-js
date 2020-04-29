@@ -28,6 +28,7 @@ class Sticky {
 
     this.options = {
       wrap: options.wrap || false,
+      wrapWith: options.wrapWith || '<span></span>',
       marginTop: options.marginTop || 0,
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
@@ -106,7 +107,7 @@ class Sticky {
    * @param {node} element - Element to be wrapped
    */
   wrapElement(element) {
-    element.insertAdjacentHTML('beforebegin', '<span></span>');
+    element.insertAdjacentHTML('beforebegin', element.getAttribute('data-sticky-wrapWith') || this.options.wrapWith);
     element.previousSibling.appendChild(element);
   }
 
