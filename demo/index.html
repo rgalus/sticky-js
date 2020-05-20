@@ -1,126 +1,133 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Sticky.js</title>
-    <meta name="description" content="Sticky.js is a library written in vanilla javascript. With this library you can easliy add sticky elements to your site which are sticky to whole page or it's parent container">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.3/foundation.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:300" rel="stylesheet">
+  <title>Sticky.js</title>
+  <meta name="description"
+    content="Sticky.js is a library written in vanilla javascript. With this library you can easliy add sticky elements to your site which are sticky to whole page or it's parent container">
 
-    <style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/foundation/6.2.3/foundation.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono|Ubuntu:300" rel="stylesheet">
 
-      body,
-      html {
-        height: auto;
-      }
+  <style>
+    body,
+    html {
+      height: auto;
+    }
 
-      body {
-        color: #2c3e50;
-        font: 300 1rem 'Ubuntu', sans-serif;
-      }
+    body {
+      color: #2c3e50;
+      font: 300 1rem 'Ubuntu', sans-serif;
+    }
 
-      h1 {
-        font-size: 1.75rem;
-        margin: 0;
-      }
+    h1 {
+      font-size: 1.75rem;
+      margin: 0;
+    }
 
-      img {
-        display: block;
-        z-index: 2;
-      }
+    img {
+      display: block;
+      z-index: 2;
+    }
 
-      footer {
-        color: #fff;
-        background: #34495e;
-        padding: 300px 0 100px;
-      }
+    footer {
+      color: #fff;
+      background: #34495e;
+      padding: 300px 0 100px;
+    }
 
-      .top-bar {
-        /*position: fixed;*/
-        /*top: 0;*/
-        /*left: 0;*/
+    .top-bar {
+      /*position: fixed;*/
+      /*top: 0;*/
+      /*left: 0;*/
 
-        /*width: 100%;*/
-      }
+      /*width: 100%;*/
+    }
 
-      .top-bar,
-      .top-bar ul {
-        color: #fff;
-        background-color: #1abc9c;
-        z-index: 4;
-      }
+    .top-bar,
+    .top-bar ul {
+      color: #fff;
+      background-color: #1abc9c;
+      z-index: 4;
+    }
 
-      .top-bar a {
-        color: #ecf0f1;
-      }
+    .top-bar a {
+      color: #ecf0f1;
+    }
 
-      .top-bar a:hover {
-        color: #fff;
-      }
+    .top-bar a:hover {
+      color: #fff;
+    }
 
-      .container {
-        margin-top: 200px;
-        background: #ecf0f1;
+    .container {
+      margin-top: 200px;
+      background: #ecf0f1;
 
-        min-height: 500px;
-      }
+      min-height: 500px;
+    }
+  </style>
+</head>
 
-    </style>
-  </head>
-  <body>
+<body>
 
-    <header class="top-bar" data-sticky>
-      <div class="top-bar-left">
-        <ul class="menu">
-          <li class="menu-text"><h1>Sticky.js</h1></li>
-        </ul>
-      </div>
-      <div class="top-bar-right">
-        <ul class="menu">
-          <li class=""><a href="https://github.com/rgalus/sticky-js" title="Sticky.js"><i class="fa fa-github fa-2x"></i><strong>GitHub</strong></a></li>
-        </ul>
-      </div>
-    </header>
+  <header class="top-bar" data-sticky>
+    <div class="top-bar-left">
+      <ul class="menu">
+        <li class="menu-text">
+          <h1>Sticky.js</h1>
+        </li>
+      </ul>
+    </div>
+    <div class="top-bar-right">
+      <ul class="menu">
+        <li class=""><a href="https://github.com/rgalus/sticky-js" title="Sticky.js"><i
+              class="fa fa-github fa-2x"></i><strong>GitHub</strong></a></li>
+      </ul>
+    </div>
+  </header>
 
-    <main>
+  <main>
 
-      <section class="container" data-sticky-container>
-        <div class="row column">
-          <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-sticky-for="1023" data-sticky-class="is-sticky" data-margin-top="100">
-          <div class="float-right">
-            <img src="http://placehold.it/250x250" alt="Sticky" data-sticky data-sticky-wrap data-margin-top="100">
-            <img src="http://placehold.it/250x125/ecf0f1?text=Not+sticky" alt="Not sticky">
-          </div>
+    <section class="container" data-sticky-container>
+      <div class="row column">
+        <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-sticky-for="1023"
+          data-sticky-class="is-sticky" data-margin-top="100" data-margin-bottom="20">
+        <div class="float-right">
+          <img src="http://placehold.it/250x250" alt="Sticky" data-sticky data-sticky-wrap data-margin-top="100">
+          <img src="http://placehold.it/250x125/ecf0f1?text=Not+sticky" alt="Not sticky">
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="container" data-sticky-container>
-        <div class="row column">
-          <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-margin-top="100">
-          <img src="http://placehold.it/250x250" class="float-right" alt="Sticky" data-sticky data-sticky-for="1023" data-margin-top="100">
-        </div>
-      </section>
+    <section class="container" data-sticky-container>
+      <div class="row column">
+        <img src="http://placehold.it/250x250" class="float-left" alt="Sticky" data-sticky data-margin-top="100">
+        <img src="http://placehold.it/250x250" class="float-right" alt="Sticky" data-sticky data-sticky-for="1023"
+          data-margin-top="100">
+      </div>
+    </section>
 
-    </main>
+  </main>
 
-    <footer class="text-center">
-      <p>Sticky.js</p>
-      <p>Created by <a href="https://github.com/rgalus" title="Sticky.js">Rafał Gałus</a></p>
-      <p><a href="https://github.com/rgalus/sticky-js" title="Sticky.js"><i class="fa fa-github fa-2x"></i></a></p>
-    </footer>
+  <footer class="text-center">
+    <p>Sticky.js</p>
+    <p>Created by <a href="https://github.com/rgalus" title="Sticky.js">Rafał Gałus</a></p>
+    <p><a href="https://github.com/rgalus/sticky-js" title="Sticky.js"><i class="fa fa-github fa-2x"></i></a></p>
+  </footer>
 
-    <script src="../dist/sticky.compile.js"></script>
+  <script src="../dist/sticky.compile.js"></script>
 
-    <script>
+  <script>
 
-      var sticky = new Sticky('[data-sticky]', {});
+    var sticky = new Sticky('[data-sticky]', {});
 
-    </script>
+  </script>
 
-  </body>
+</body>
+
 </html>
