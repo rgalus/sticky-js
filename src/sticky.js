@@ -307,7 +307,7 @@ class Sticky {
         }
 
         if (passedAnchor) {
-          this.css(element, { top: element.sticky.marginTop + anchorTop - wrapperTop - elementHeight + 'px' });
+          this.css(element, { top: anchorTop - wrapperTop - elementHeight + 'px' });
         } else {
           this.css(element, { top: element.sticky.marginTop + 'px' });
         }
