@@ -52,12 +52,12 @@ class Sticky {
    */
   run() {
     // wait for page to be fully loaded
-    const pageLoaded = setInterval(() => {
+    this.onPageLoad = setInterval(() => {
       if (document.readyState === 'complete') {
-        clearInterval(pageLoaded);
+        clearInterval(this.onPageLoad);
 
         const elements = document.querySelectorAll(this.selector);
-        this.forEach(elements, (element) => this.renderElement(element));
+        this.forEach(elements, element => this.renderElement(element));
       }
     }, 10);
   }
@@ -113,6 +113,16 @@ class Sticky {
     element.previousSibling.appendChild(element);
   }
 
+  /**
+   * Unwraps element from placeholder element
+   * @function
+   * @param {node} element - Element to be wrapped
+   */
+  unwrapElement(element) {
+    const container = element.parentElement;
+    container.insertAdjacentElement('beforebegin', element);
+    container.remove();
+  }
 
   /**
    * Function that activates element when specified conditions are met and then initalise events
@@ -325,17 +335,21 @@ class Sticky {
    * Destroys sticky element, remove listeners
    * @function
    */
-   destroy() {
+  destroy() {
+    clearInterval(this.onPageLoad);
     window.removeEventListener('load', this.updateScrollTopPosition);
     window.removeEventListener('scroll', this.updateScrollTopPosition);
 
-    this.forEach(this.elements, (element) => {
+    this.forEach(this.elements, element => {
       this.destroyResizeEvents(element);
       this.destroyScrollEvents(element);
+      if (element.sticky.wrap) {
+        this.unwrapElement(element);
+      }
       delete element.sticky;
     });
-   }
-
+    this.elements = [];
+  }
 
   /**
    * Function that returns container element in which sticky element is stuck (if is not specified, then it's stuck to body)
