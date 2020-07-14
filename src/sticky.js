@@ -34,6 +34,7 @@ class Sticky {
       stickyFor: options.stickyFor || 0,
       stickyClass: options.stickyClass || null,
       stickyContainer: options.stickyContainer || 'body',
+      onChange: options.onChange || null
     };
 
     this.updateScrollTopPosition = this.updateScrollTopPosition.bind(this);
@@ -75,11 +76,22 @@ class Sticky {
     // set default variables
     element.sticky.active = false;
 
-    element.sticky.marginTop = parseInt(element.getAttribute('data-margin-top')) || this.options.marginTop;
-    element.sticky.marginBottom = parseInt(element.getAttribute('data-margin-bottom')) || this.options.marginBottom;
-    element.sticky.stickyFor = parseInt(element.getAttribute('data-sticky-for')) || this.options.stickyFor;
-    element.sticky.stickyClass = element.getAttribute('data-sticky-class') || this.options.stickyClass;
-    element.sticky.wrap = element.hasAttribute('data-sticky-wrap') ? true : this.options.wrap;
+    element.sticky.marginTop =
+      parseInt(element.getAttribute('data-margin-top')) ||
+      this.options.marginTop;
+    element.sticky.marginBottom =
+      parseInt(element.getAttribute('data-margin-bottom')) ||
+      this.options.marginBottom;
+    element.sticky.stickyFor =
+      parseInt(element.getAttribute('data-sticky-for')) ||
+      this.options.stickyFor;
+    element.sticky.stickyClass =
+      element.getAttribute('data-sticky-class') || this.options.stickyClass;
+    element.sticky.onChange =
+      element.getAttribute('data-sticky-on-change') || this.options.onChange;
+    element.sticky.wrap = element.hasAttribute('data-sticky-wrap')
+      ? true
+      : this.options.wrap;
     // @todo attribute for stickyContainer
     // element.sticky.stickyContainer = element.getAttribute('data-sticky-container') || this.options.stickyContainer;
     element.sticky.stickyContainer = this.options.stickyContainer;
@@ -266,7 +278,14 @@ class Sticky {
       if (element.sticky.stickyClass) {
         element.classList.add(element.sticky.stickyClass);
       }
-    } else if (this.scrollTop > (element.sticky.rect.top - element.sticky.marginTop)) {
+      if (element.sticky.onChange && !element.sticky.on) {
+        element.sticky.on = true;
+        element.sticky.onChange(true);
+      }
+    } else if (
+      this.scrollTop >
+      element.sticky.rect.top - element.sticky.marginTop
+    ) {
       this.css(element, {
         position: 'fixed',
         width: element.sticky.rect.width + 'px',
@@ -281,6 +300,10 @@ class Sticky {
         if (element.sticky.stickyClass) {
           element.classList.remove(element.sticky.stickyClass);
         }
+        if (element.sticky.onChange && element.sticky.on) {
+          element.sticky.on = false;
+          element.sticky.onChange(false);
+        }
 
         this.css(element, {
           top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height + element.sticky.marginBottom) + 'px' }
@@ -288,6 +311,10 @@ class Sticky {
       } else {
         if (element.sticky.stickyClass) {
           element.classList.add(element.sticky.stickyClass);
+        }
+        if (element.sticky.onChange && !element.sticky.on) {
+          element.sticky.on = true;
+          element.sticky.onChange(true);
         }
 
         this.css(element, { top: element.sticky.marginTop + 'px' });
@@ -302,9 +329,13 @@ class Sticky {
       if (element.sticky.wrap) {
         this.css(element.parentNode, { display: '', width: '', height: '' });
       }
-    }
-   }
 
+      if (element.sticky.onChange && element.sticky.on) {
+        element.sticky.on = false;
+        element.sticky.onChange(false);
+      }
+    }
+  }
 
   /**
    * Function that updates element sticky rectangle (with sticky container), then activate or deactivate element, then update position if it's active
