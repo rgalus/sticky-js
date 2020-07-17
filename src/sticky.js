@@ -152,7 +152,15 @@ class Sticky {
    * @param {node} element - Element for which resize events are initialised
    */
    initResizeEvents(element) {
-    element.sticky.resizeListener = () => this.onResizeEvents(element);
+    let resizeTimeout;
+
+    element.sticky.resizeListener = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        this.useAF = false;
+        this.onResizeEvents(element);
+      }, 250);
+    };
     window.addEventListener('resize', element.sticky.resizeListener);
    }
 
@@ -175,8 +183,8 @@ class Sticky {
    onResizeEvents(element) {
     this.vp = this.getViewportSize();
 
-    element.sticky.rect = this.getRectangle(element, false);
-    element.sticky.container.rect = this.getRectangle(element.sticky.container, false);
+    element.sticky.rect = this.getRectangle(element);
+    element.sticky.container.rect = this.getRectangle(element.sticky.container);
 
     if (
       ((element.sticky.rect.top + element.sticky.rect.height) < (element.sticky.container.rect.top + element.sticky.container.rect.height))
@@ -192,7 +200,7 @@ class Sticky {
       element.sticky.active = false;
     }
 
-    this.setPosition(element, false);
+    this.setPosition(element);
    }
 
 
@@ -224,6 +232,7 @@ class Sticky {
    */
    onScrollEvents(element) {
     if (element.sticky && element.sticky.active) {
+      this.useAF = true;
       this.setPosition(element);
     }
    }
@@ -234,8 +243,8 @@ class Sticky {
    * @function
    * @param {node} element - Element that will be positioned if it's active
    */
-   setPosition(element, useAnimationFrame) {
-    this.css(element, { position: '', width: '', top: '', left: '' }, useAnimationFrame);
+   setPosition(element) {
+    this.css(element, { position: '', width: '', top: '', left: '' });
 
     if ((this.vp.height < element.sticky.rect.height) || !element.sticky.active) {
       return;
@@ -250,7 +259,7 @@ class Sticky {
         display: 'block',
         width: element.sticky.rect.width + 'px',
         height: element.sticky.rect.height + 'px',
-      }, useAnimationFrame);
+      });
     }
 
     if (
@@ -262,7 +271,7 @@ class Sticky {
         top: element.sticky.rect.top + 'px',
         left: element.sticky.rect.left + 'px',
         width: element.sticky.rect.width + 'px',
-      }, useAnimationFrame);
+      });
       if (element.sticky.stickyClass) {
         element.classList.add(element.sticky.stickyClass);
       }
@@ -271,7 +280,7 @@ class Sticky {
         position: 'fixed',
         width: element.sticky.rect.width + 'px',
         left: element.sticky.rect.left + 'px',
-      }, useAnimationFrame);
+      });
 
       if (
         (this.scrollTop + element.sticky.rect.height + element.sticky.marginTop)
@@ -290,17 +299,17 @@ class Sticky {
           element.classList.add(element.sticky.stickyClass);
         }
 
-        this.css(element, { top: element.sticky.marginTop + 'px' }, useAnimationFrame);
+        this.css(element, { top: element.sticky.marginTop + 'px' });
       }
     } else {
       if (element.sticky.stickyClass) {
         element.classList.remove(element.sticky.stickyClass);
       }
 
-      this.css(element, { position: '', width: '', top: '', left: '' }, useAnimationFrame);
+      this.css(element, { position: '', width: '', top: '', left: '' });
 
       if (element.sticky.wrap) {
-        this.css(element.parentNode, { display: '', width: '', height: '' }, useAnimationFrame);
+        this.css(element.parentNode, { display: '', width: '', height: '' });
       }
     }
    }
@@ -364,8 +373,8 @@ class Sticky {
    * @param {node} element - Element which position & rectangle are returned
    * @return {object}
    */
-  getRectangle(element, useAnimationFrame) {
-    this.css(element, { position: '', width: '', top: '', left: '' }, useAnimationFrame);
+  getRectangle(element) {
+    this.css(element, { position: '', width: '', top: '', left: '' });
 
     const width = Math.max(element.offsetWidth, element.clientWidth, element.scrollWidth);
     const height = Math.max(element.offsetHeight, element.clientHeight, element.scrollHeight);
@@ -424,12 +433,10 @@ class Sticky {
    * @helper
    * @param {node} element - DOM element
    * @param {object} properties - CSS properties that will be added/removed from specified element
-   * @param {boolean} useAnimationFrame - if true requestAnimationFrame is used
    */
-  css(element, properties, useAnimationFrame) {
-
-    if (useAnimationFrame !== false) {
-      window.requestAnimationFrame(function() {
+  css(element, properties) {
+    if (this.useAF === true) {
+      window.requestAnimationFrame(() => {
         for (let property in properties) {
           if (properties.hasOwnProperty(property)) {
             element.style[property] = properties[property];
