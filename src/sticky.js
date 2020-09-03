@@ -293,7 +293,7 @@ class Sticky {
 
         this.css(element, {
           top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height + element.sticky.marginBottom) + 'px'
-        }, useAnimationFrame);
+        });
       } else {
         if (element.sticky.stickyClass) {
           element.classList.add(element.sticky.stickyClass);
