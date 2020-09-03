@@ -152,7 +152,15 @@ class Sticky {
    * @param {node} element - Element for which resize events are initialised
    */
    initResizeEvents(element) {
-    element.sticky.resizeListener = () => this.onResizeEvents(element);
+    let resizeTimeout;
+
+    element.sticky.resizeListener = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        this.useAF = false;
+        this.onResizeEvents(element);
+      }, 250);
+    };
     window.addEventListener('resize', element.sticky.resizeListener);
    }
 
@@ -224,6 +232,7 @@ class Sticky {
    */
    onScrollEvents(element) {
     if (element.sticky && element.sticky.active) {
+      this.useAF = true;
       this.setPosition(element);
     }
    }
@@ -283,8 +292,8 @@ class Sticky {
         }
 
         this.css(element, {
-          top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height + element.sticky.marginBottom) + 'px' }
-        );
+          top: (element.sticky.container.rect.top + element.sticky.container.offsetHeight) - (this.scrollTop + element.sticky.rect.height + element.sticky.marginBottom) + 'px'
+        });
       } else {
         if (element.sticky.stickyClass) {
           element.classList.add(element.sticky.stickyClass);
@@ -426,9 +435,19 @@ class Sticky {
    * @param {object} properties - CSS properties that will be added/removed from specified element
    */
   css(element, properties) {
-    for (let property in properties) {
-      if (properties.hasOwnProperty(property)) {
-        element.style[property] = properties[property];
+    if (this.useAF === true) {
+      window.requestAnimationFrame(() => {
+        for (let property in properties) {
+          if (properties.hasOwnProperty(property)) {
+            element.style[property] = properties[property];
+          }
+        }
+      });
+    } else {
+      for (let property in properties) {
+        if (properties.hasOwnProperty(property)) {
+          element.style[property] = properties[property];
+        }
       }
     }
   }
